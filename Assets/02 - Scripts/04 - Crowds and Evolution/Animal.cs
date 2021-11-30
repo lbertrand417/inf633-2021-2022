@@ -111,6 +111,8 @@ public class Animal : MonoBehaviour
         // 3. Act using actuators.
         float angle = (output[0] * 2.0f - 1.0f) * maxAngle;
         tfm.Rotate(0.0f, angle, 0.0f);
+
+
     }
 
     /// <summary>
@@ -148,9 +150,17 @@ public class Animal : MonoBehaviour
                 if ((int)px >= 0 && (int)px < details.GetLength(1) && (int)py >= 0 && (int)py < details.GetLength(0) && details[(int)py, (int)px] > 0)
                 {
                     vision[i] = distance / maxVision;
+                    Debug.DrawLine(tfm.position, tfm.position + tfm.TransformDirection(new Vector3(distance * forwardAnimal.x, 0, distance * forwardAnimal.z)), Color.red);
                     break;
                 }
             }
+
+            if (genetic_algo.debugVision)
+            {
+                Debug.DrawRay(tfm.position, tfm.TransformDirection(new Vector3(maxVision * forwardAnimal.x, 0, maxVision * forwardAnimal.z)));
+            }
+            
+
         }
     }
 

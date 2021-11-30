@@ -10,6 +10,8 @@ public class GeneticAlgo : MonoBehaviour
     [Header("Genetic Algorithm parameters")]
     public int popSize = 100;
     public GameObject animalPrefab;
+    public bool debugVision = false;
+
 
     [Header("Dynamic elements")]
     public float vegetationGrowthRate = 1.0f;
