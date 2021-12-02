@@ -23,7 +23,7 @@ public class RandomInstanceBrush : InstanceBrush
         {
             Debug.Log("circle");
 
-            if ((Math.Pow(dx, 2) + Math.Pow(dz, 2)) > Math.Pow(radius, 2))
+            if ((Math.Pow(dx, 2) + Math.Pow(dz, 2)) < Math.Pow(radius, 2))
             {
                 spawnObject(x + dx, z + dz);
             }

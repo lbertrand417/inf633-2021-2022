@@ -20,7 +20,7 @@ public class GaussianBrush : TerrainBrush
                     //r² = -2ln(0.05)s² = 2ln(1/0.05)s²
                     //s = r / sqrt(2ln(1/0.05))
                     double sigma = radius / Math.Sqrt(2 * Math.Log(1 / 0.05)); // To have almost 0 at the boundary of the sphere
-                    terrain.set(x + xi, z + zi, oldHeight + amplitude * (float)Math.Exp(-(Math.Pow(xi, 2) + Math.Pow(zi, 2)) / (2 * Math.Pow(sigma, 2))));
+                    terrain.set(x + xi, z + zi, Math.Max(0, oldHeight + amplitude * (float)Math.Exp(-(Math.Pow(xi, 2) + Math.Pow(zi, 2)) / (2 * Math.Pow(sigma, 2)))));
                 }
 
             }
