@@ -26,6 +26,7 @@ public class QuadrupedProceduralMotion : MonoBehaviour
     public Transform hips;
     public float heightAcceleration;
     public Vector3 constantHipsPosition;
+    public Vector3 constantRayPosition;
     public Vector3 constantHipsRotation;
     public Transform groundChecker;
     public Vector3 normalTerrain;
@@ -141,6 +142,11 @@ public class QuadrupedProceduralMotion : MonoBehaviour
     {
         constantHipsPosition = new Vector3(hips.position.x, hips.position.y, hips.position.z);
         constantHipsRotation = new Vector3(hips.rotation.x, hips.rotation.y, hips.rotation.z);
+        Vector3 raycastOrigin = groundChecker.position;
+
+        // The ray information gives you where you hit and the normal of the terrain in that location.
+        if (Physics.Raycast(raycastOrigin, -transform.up, out RaycastHit hit, Mathf.Infinity))
+            constantRayPosition = hit.point;
     }
 
     /// <summary>
@@ -171,9 +177,10 @@ public class QuadrupedProceduralMotion : MonoBehaviour
 
         // START TODO ###################
 
-        hips.position = new Vector3(hips.position.x, posHit.y + constantHipsPosition.y, hips.position.z);
+        hips.position = new Vector3(hips.position.x, posHit.y-constantRayPosition.y+ constantHipsPosition.y+0.2f, hips.position.z);
         Quaternion angle = Quaternion.FromToRotation(hips.up, normalTerrain);
         hips.rotation = Quaternion.Slerp(hips.rotation, angle * hips.rotation, 1 - Mathf.Exp(-speedHead * Time.deltaTime));
+
 
         // END TODO ###################
     }
@@ -242,7 +249,6 @@ public class QuadrupedProceduralMotion : MonoBehaviour
         goalLocalLookDir = headBone.parent.transform.InverseTransformDirection(goalWorldLookDir);
 
         Quaternion targetLocalRotation = Quaternion.LookRotation(Vector3.RotateTowards(headBone.forward, goalLocalLookDir, angleHeadLimit, 300), headBone.up); // Change!
-        //Quaternion targetLocalRotation = Quaternion.identity;
 
         // END TODO ###################
 

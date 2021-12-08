@@ -45,17 +45,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2da0cc07004fd40a196e4058316a4276, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  swap_rate: 0.01
-  mutate_rate: 0.01
-  swap_strength: 10
-  mutate_strength: 0.5
-  max_angle: 10
-  max_energy: 10
-  energy_loss: 0.1
-  energy_gain: 10
-  max_vision: 20
-  angle_step: 10
-  nb_eyes: 5
+  swapRate: 0.01
+  mutateRate: 0.01
+  swapStrength: 10
+  mutateStrength: 0.5
+  maxAngle: 10
+  maxEnergy: 10
+  lossEnergy: 1
+  gainEnergy: 10
+  maxVision: 20
+  stepAngle: 10
+  nEyes: 5
 --- !u!114 &6733265589692463593
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -68,7 +68,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc1f469cac40517759e7c8ac324ba401, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  max_speed: 0.5
+  max_speed: 0.51
 --- !u!1 &6733265590630552185
 GameObject:
   m_ObjectHideFlags: 0

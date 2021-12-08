@@ -83,7 +83,6 @@ public class PlayerControllerInput : MonoBehaviour
 
         // forward and right are normalized vectors.
         desiredMoveDirection = forward * InputZ + right * InputX;
-
         // Rotates the character between the current angle (transform.rotation) to the forward direction of the vector in which you are moving according to InputX and InputZ.
         // It can be modified to certain time or speed.
         if(blockRotationPlayer == false)

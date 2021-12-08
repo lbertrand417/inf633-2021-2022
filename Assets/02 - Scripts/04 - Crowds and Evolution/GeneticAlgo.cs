@@ -6,18 +6,21 @@ using UnityEngine.UI;
 
 public class GeneticAlgo : MonoBehaviour
 {
-
+    
     [Header("Genetic Algorithm parameters")]
-    public int popSize = 100;
+    public int popSize = 40;
     public GameObject animalPrefab;
     public bool showVision = false;
-
-
+    public bool mutate = true;
     [Header("Dynamic elements")]
     public float vegetationGrowthRate = 1.0f;
     public float currentGrowth;
+    public float maxVegetationHeight = 50f;
+    public float maxVegetationSteep = 25f;
 
     private List<GameObject> animals;
+    private List<GameObject> predators;
+    private float totalSpeed;
     protected Terrain terrain;
     protected CustomTerrain customTerrain;
     protected float width;
@@ -36,11 +39,16 @@ public class GeneticAlgo : MonoBehaviour
 
         // Initialize animals array.
         animals = new List<GameObject>();
+        predators = new List<GameObject>();
+
         for (int i = 0; i < popSize; i++)
         {
             GameObject animal = makeAnimal();
             animals.Add(animal);
+            totalSpeed += 0.5f;
         }
+
+        
     }
 
     void Update()
@@ -49,8 +57,9 @@ public class GeneticAlgo : MonoBehaviour
         while (animals.Count < popSize / 2)
         {
             animals.Add(makeAnimal());
+            totalSpeed += 0.5f;
         }
-        customTerrain.debug.text = "N° animals: " + animals.Count.ToString();
+        customTerrain.debug.text = "N° animals: " + animals.Count.ToString() +"\n" + "Avg Speed: " + (totalSpeed/animals.Count).ToString();
 
         // Update grass elements/food resources.
         updateResources();
@@ -68,7 +77,12 @@ public class GeneticAlgo : MonoBehaviour
         {
             int x = (int)(UnityEngine.Random.value * detail_sz.x);
             int y = (int)(UnityEngine.Random.value * detail_sz.y);
-            details[y, x] = 1;
+            float tx = (float)x / detail_sz.x * width;
+            float ty = (float)y / detail_sz.y * height;
+            if (customTerrain.get(tx,ty) < maxVegetationHeight && customTerrain.getSteepness(tx,ty)<maxVegetationSteep)
+            {
+                details[y, x] = 1;
+            }
             currentGrowth -= 1.0f;
         }
         customTerrain.saveDetails();
@@ -108,8 +122,10 @@ public class GeneticAlgo : MonoBehaviour
     public void addOffspring(Animal parent)
     {
         GameObject animal = makeAnimal(parent.transform.position);
-        animal.GetComponent<Animal>().InheritBrain(parent.GetBrain(), true);
+        animal.GetComponent<Animal>().InheritBrain(parent.GetBrain(), mutate);
+        animal.GetComponent<Animal>().InheritAttributes(parent.GetSpeed(), mutate);
         animals.Add(animal);
+        totalSpeed += animal.GetComponent<Animal>().GetSpeed();
     }
 
     /// <summary>
@@ -119,7 +135,16 @@ public class GeneticAlgo : MonoBehaviour
     public void removeAnimal(Animal animal)
     {
         animals.Remove(animal.transform.gameObject);
+        totalSpeed -= animal.GetComponent<Animal>().GetSpeed(); 
         Destroy(animal.transform.gameObject);
     }
 
+    public int getAnimalCount()
+    {
+        return animals.Count;
+    }
+    public float getAverageSpeed()
+    {
+        return totalSpeed/animals.Count;
+    }
 }

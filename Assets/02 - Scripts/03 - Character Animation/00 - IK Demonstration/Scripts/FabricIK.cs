@@ -37,7 +37,9 @@ public class FabricIK : MonoBehaviour
     }
 
     private void Init()
+
     {
+        Debug.Log("Init");
         /*
          * If chain length is n, we have n+1 bones.
          * See bones as a set of a joint (bonePosition, represented as "O") and a length (bones Length, equal to chainLength).
@@ -71,8 +73,6 @@ public class FabricIK : MonoBehaviour
             // START TODO ###################
 
             // Just a placeholder. Change with the correct transform!
-            //bones[i] = transform.parent;
-
             bones[i] = current;
             startingBoneRotation[i] = current.rotation;
 
@@ -96,7 +96,7 @@ public class FabricIK : MonoBehaviour
             {
                 // START TODO ###################
 
-                bonesLength[i] = Vector3.Magnitude(bones[i + 1].position - current.position);
+                bonesLength[i] = (bones[i + 1].position - current.position).magnitude;
                 completeLength += bonesLength[i];
 
                 // END TODO ###################
@@ -158,13 +158,11 @@ public class FabricIK : MonoBehaviour
         // START TODO ###################
 
         // Change condition!
-        if (Vector3.Magnitude(target.position - bonesPositions[0]) > completeLength)
-        //if ((target.position - bonesPositions[0]).sqrMagnitude >= completeLength * completeLength)
+        if ((target.position - bonesPositions[0]).magnitude > completeLength)
         {
             for (int i = 1; i < bones.Length; i++)
             {
                 bonesPositions[i] = bonesPositions[i - 1] + (target.position - bonesPositions[0]).normalized * bonesLength[i - 1];
-                Debug.Log(bonesPositions[i]);
             }
         }
 
@@ -201,12 +199,9 @@ public class FabricIK : MonoBehaviour
                     // START TODO ###################
 
                     if (i == bones.Length - 1)
-                    {
                         bonesPositions[i] = target.position;
-                    } else
-                    {
-                        bonesPositions[i] = bonesPositions[i + 1] + bonesLength[i] * (bonesPositions[i] - bonesPositions[i + 1]).normalized;
-                    }
+                    else
+                        bonesPositions[i] = bonesPositions[i + 1] + (bonesPositions[i] - bonesPositions[i+1]).normalized * bonesLength[i];
 
                     // END TODO ###################
                 }
@@ -220,7 +215,7 @@ public class FabricIK : MonoBehaviour
 
                     // START TODO ###################
 
-                    bonesPositions[i] = bonesPositions[i - 1] + bonesLength[i - 1] * (bonesPositions[i] - bonesPositions[i - 1]).normalized;
+                    bonesPositions[i] = bonesPositions[i - 1] + (bonesPositions[i] - bonesPositions[i - 1]).normalized * bonesLength[i-1]; ;
 
                     // END TODO ###################
 
@@ -244,7 +239,7 @@ public class FabricIK : MonoBehaviour
                     var projectedPole = plane.ClosestPointOnPlane(pole.position);
                     var projectedBone = plane.ClosestPointOnPlane(bonesPositions[i]);
                     var angle = Vector3.SignedAngle(projectedBone - bonesPositions[i - 1], projectedPole - bonesPositions[i - 1], plane.normal);
-                    bonesPositions[i] = Quaternion.AngleAxis(angle, plane.normal) * (bonesPositions[i] - bonesPositions[i - 1]) + bonesPositions[i - 1]; 
+                    bonesPositions[i] = Quaternion.AngleAxis(angle, plane.normal) * (bonesPositions[i] - bonesPositions[i - 1]) + bonesPositions[i - 1];
                 }
             }
 
@@ -282,7 +277,7 @@ public class FabricIK : MonoBehaviour
             Handles.matrix = Matrix4x4.TRS(current.position, Quaternion.FromToRotation(Vector3.up, current.parent.position - current.position), new Vector3(scale, Vector3.Distance(current.parent.position, current.position), scale));
             Handles.color = Color.blue;
             Handles.DrawWireCube(Vector3.up * 0.5f, Vector3.one);
-            
+
             current = current.parent;
         }
     }

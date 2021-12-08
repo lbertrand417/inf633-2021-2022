@@ -5079,8 +5079,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2954251903139554735}
-  m_LocalRotation: {x: 0, y: 0.3420201, z: 0, w: 0.9396927}
-  m_LocalPosition: {x: 0.75, y: 0.3123458, z: 0.70899963}
+  m_LocalRotation: {x: -0, y: 0.34202048, z: -0, w: 0.9396925}
+  m_LocalPosition: {x: 0.75, y: 0.31234682, z: 0.70899963}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2954251903638493160}
@@ -5100,7 +5100,7 @@ ParentConstraint:
   m_TranslationAtRest: {x: 0.75, y: 0.3123458, z: 0.70899963}
   m_RotationAtRest: {x: 0, y: 40.00001, z: 0}
   m_TranslationOffsets:
-  - {x: 0.75, y: -0.645556, z: 0.054771423}
+  - {x: 0.75, y: -0.64555454, z: 0.054771423}
   m_RotationOffsets:
   - {x: 4.619032, y: 40.156853, z: 3.8872268}
   m_AffectTranslationX: 1
@@ -5505,8 +5505,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2954251903923410750}
-  m_LocalRotation: {x: 0, y: -0.49999958, z: -0, w: 0.8660257}
-  m_LocalPosition: {x: -0.9299927, y: 0.32199955, z: -1.0000038}
+  m_LocalRotation: {x: 0, y: -0.4999992, z: -0, w: 0.86602587}
+  m_LocalPosition: {x: -0.9299927, y: 0.32200086, z: -0.9999924}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2954251903643962278}
@@ -5526,7 +5526,7 @@ ParentConstraint:
   m_TranslationAtRest: {x: -0.9299927, y: 0.32199955, z: -1.0000038}
   m_RotationAtRest: {x: 0, y: -59.99992, z: 0}
   m_TranslationOffsets:
-  - {x: -0.9299927, y: -0.4562974, z: -1.6437492}
+  - {x: -0.9299927, y: -0.45629692, z: -1.6437378}
   m_RotationOffsets:
   - {x: 3.0129874, y: -60.13759, z: -5.230716}
   m_AffectTranslationX: 1
@@ -5788,8 +5788,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2954251904142021967}
-  m_LocalRotation: {x: 0, y: 0.5, z: 0, w: 0.8660254}
-  m_LocalPosition: {x: 0.93, y: 0.32199997, z: -1}
+  m_LocalRotation: {x: -0, y: 0.4999996, z: -0, w: 0.8660256}
+  m_LocalPosition: {x: 0.9300003, y: 0.32200086, z: -0.9999924}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2954251904686213913}
@@ -5809,7 +5809,7 @@ ParentConstraint:
   m_TranslationAtRest: {x: 0.93, y: 0.32199997, z: -1}
   m_RotationAtRest: {x: 0, y: 59.999973, z: 0}
   m_TranslationOffsets:
-  - {x: 0.9299927, y: -0.4562974, z: -1.6437454}
+  - {x: 0.9300003, y: -0.45629692, z: -1.6437378}
   m_RotationOffsets:
   - {x: 3.0129821, y: 60.137646, z: 5.2307177}
   m_AffectTranslationX: 1
@@ -5928,8 +5928,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2954251904250419952}
-  m_LocalRotation: {x: 0, y: -0.3420201, z: 0, w: 0.9396927}
-  m_LocalPosition: {x: -0.75, y: 0.3123458, z: 0.70899963}
+  m_LocalRotation: {x: 0, y: -0.34202048, z: -0, w: 0.9396925}
+  m_LocalPosition: {x: -0.75, y: 0.31234682, z: 0.70899963}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2954251904005579245}
@@ -5949,7 +5949,7 @@ ParentConstraint:
   m_TranslationAtRest: {x: -0.75, y: 0.3123458, z: 0.70899963}
   m_RotationAtRest: {x: 0, y: -40.00001, z: 0}
   m_TranslationOffsets:
-  - {x: -0.75, y: -0.645556, z: 0.054771423}
+  - {x: -0.75, y: -0.64555454, z: 0.054771423}
   m_RotationOffsets:
   - {x: 4.619032, y: -40.156853, z: -3.8872268}
   m_AffectTranslationX: 1
@@ -6139,7 +6139,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   homeTransform: {fileID: 2954251903923410751}
-  distanceThreshold: 0.45
+  distanceThreshold: 0.13
   angleThreshold: 135
   moveDuration: 0.125
   stepOvershootFraction: 0.75
@@ -7103,6 +7103,7 @@ MonoBehaviour:
   hips: {fileID: 8107060311549103564}
   heightAcceleration: 1
   constantHipsPosition: {x: 0, y: 0, z: 0}
+  constantRayPosition: {x: 0, y: 0, z: 0}
   constantHipsRotation: {x: 0, y: 0, z: 0}
   groundChecker: {fileID: 2954251903116196027}
   normalTerrain: {x: 0, y: 0, z: 0}

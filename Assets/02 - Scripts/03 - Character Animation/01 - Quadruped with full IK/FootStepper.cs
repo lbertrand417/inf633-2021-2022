@@ -50,12 +50,11 @@ public class FootStepper : MonoBehaviour
 
         float distFromHome = Vector3.Magnitude(this.transform.position - homeTransform.position);
         float angleFromHome = Quaternion.Angle(this.transform.rotation, homeTransform.rotation);
-
+        
         // Change condition!
         if (distFromHome > distanceThreshold || angleFromHome > angleThreshold)
         {
-            // END TODO ###################
-
+            // END TODO ##################
             // Get the grounded location for the feet. It can return false - in that case, it won't move.
             // This method modifies the values by reference, which are used later.
             if (GetGroundedEndPosition(out Vector3 endPos, out Vector3 endNormal))
@@ -91,7 +90,7 @@ public class FootStepper : MonoBehaviour
         Vector3 towardsHome = (homeTransform.position - transform.position).normalized;
         float overshootDistance = distanceThreshold * stepOvershootFraction;
         Vector3 overshootVector = towardsHome * overshootDistance;
-
+      
         /*
          * Now, we build a raycast system. Check: https://docs.unity3d.com/ScriptReference/Physics.Raycast.html
          * The ray will detect a collision with the terrain and use such information to place the foot accordingly on the ground.
@@ -106,11 +105,11 @@ public class FootStepper : MonoBehaviour
         Vector3 raycastOrigin = homeTransform.position + overshootVector;
 
         RaycastHit hit;
+        
         if (Physics.Raycast(raycastOrigin, transform.TransformDirection(Vector3.down), out hit))
         {
             endPos = hit.point;
             endNormal = hit.normal;
-
             return true;
         }
 
