@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Animal : MonoBehaviour
+public class Predator : MonoBehaviour
 {
 
     [Header("Animal parameters")]
@@ -96,14 +96,14 @@ public class Animal : MonoBehaviour
             if (energy > maxEnergy)
                 energy = maxEnergy;
 
-            genetic_algo.addOffspring(this);
+            //genetic_algo.addOffspring(this);
         }
 
         // If the energy is below 0, the animal dies.
         if (energy < 0)
         {
             energy = 0.0f;
-            genetic_algo.removeAnimal(this);
+            //genetic_algo.removeAnimal(this);
         }
 
         // Update the color of the animal as a function of the energy that it contains.
