@@ -131,6 +131,12 @@ public class Animal : MonoBehaviour
             float sy = tfm.position.z * ratio.y;
             vision[i] = 1.0f;
 
+            if (genetic_algo.showVision)
+            {
+                Vector3 line_dir = Quaternion.Euler(0.0f, startingAngle + (stepAngle * i), 0.0f) * Vector3.forward;
+                Debug.DrawLine(tfm.position, tfm.TransformPoint(new Vector3(maxVision * line_dir.x, 0, maxVision * line_dir.z)));
+            }
+
             // Interate over vision length.
             for (float distance = 1.0f; distance < maxVision; distance += 0.5f)
             {
@@ -150,16 +156,14 @@ public class Animal : MonoBehaviour
                 if ((int)px >= 0 && (int)px < details.GetLength(1) && (int)py >= 0 && (int)py < details.GetLength(0) && details[(int)py, (int)px] > 0)
                 {
                     vision[i] = distance / maxVision;
-                    Debug.DrawLine(tfm.position, tfm.position + tfm.TransformDirection(new Vector3(distance * forwardAnimal.x, 0, distance * forwardAnimal.z)), Color.red);
+                    if (genetic_algo.showVision)
+                    {
+                        Vector3 line_dir = Quaternion.Euler(0.0f, startingAngle + (stepAngle * i), 0.0f) * Vector3.forward;
+                        Debug.DrawLine(tfm.position, tfm.TransformPoint(new Vector3(distance * line_dir.x, 0, distance * line_dir.z)), Color.red);
+                    }
                     break;
                 }
-            }
-
-            if (genetic_algo.debugVision)
-            {
-                Debug.DrawRay(tfm.position, tfm.TransformDirection(new Vector3(maxVision * forwardAnimal.x, 0, maxVision * forwardAnimal.z)));
-            }
-            
+            }           
 
         }
     }

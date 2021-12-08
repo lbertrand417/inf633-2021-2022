@@ -10,7 +10,7 @@ public class GeneticAlgo : MonoBehaviour
     [Header("Genetic Algorithm parameters")]
     public int popSize = 100;
     public GameObject animalPrefab;
-    public bool debugVision = false;
+    public bool showVision = false;
 
 
     [Header("Dynamic elements")]
