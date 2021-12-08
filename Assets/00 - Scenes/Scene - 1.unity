@@ -913,12 +913,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58addec6626ef40dfb932e8efbbb6236, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  popSize: 10
+  popSize: 40
   animalPrefab: {fileID: 6733265589692463594, guid: b8a4860b06bc8b44fa2e523916edd3dd,
     type: 3}
   predatorPrefab: {fileID: 6733265589692463594, guid: 413dd81800e38da4ba53c3f205096052,
     type: 3}
-  showVision: 0
+  showVision: 1
   mutate: 1
   vegetationGrowthRate: 1
   currentGrowth: 0
@@ -2226,7 +2226,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2137751596}
-  m_LocalRotation: {x: 0.10257357, y: 0.3128456, z: -0.03400641, w: 0.94363654}
+  m_LocalRotation: {x: 0.10257358, y: 0.31284562, z: -0.03400642, w: 0.94363654}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:

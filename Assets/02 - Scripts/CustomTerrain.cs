@@ -58,6 +58,7 @@ public class CustomTerrain : MonoBehaviour {
         detail_height = terrain_data.detailHeight;
         detail_layer = terrain_data.GetDetailLayer(0, 0, detail_width, detail_height, 0);
         animals_data = new bool[detail_width, detail_height];
+        predators_data = new bool[detail_width, detail_height];
         amap_width = terrain_data.alphamapWidth;
         amap_height = terrain_data.alphamapHeight;
         alphamaps = terrain_data.GetAlphamaps(0, 0, amap_width, amap_height);
@@ -181,12 +182,14 @@ public class CustomTerrain : MonoBehaviour {
     {
         return animals_data[x, z];
     }
+
+    
     public void setPredatorPos(int x, int z, bool b)
     {
         predators_data[x, z] = b;
     }
 
-    public bool getPredatorPos(int x, int z)
+    public bool GetPredatorPos(int x, int z)
     {
         return predators_data[x, z];
     }

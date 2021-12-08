@@ -13,6 +13,9 @@ public class GeneticAlgo : MonoBehaviour
     public GameObject predatorPrefab;
     public bool showVision = false;
     public bool mutate = true;
+
+    private SimpleNeuralNet globalNeuralNet;
+    private SimpleNeuralNet globalPredNeuralNet;
     [Header("Dynamic elements")]
     public float vegetationGrowthRate = 1.0f;
     public float currentGrowth;
@@ -41,7 +44,10 @@ public class GeneticAlgo : MonoBehaviour
         // Initialize animals array.
         animals = new List<GameObject>();
         predators = new List<GameObject>();
-
+        int[] networkStruct = new int[] { 5, 5, 1 };
+        int[] predNetworkStruct = new int[] { 6, 6, 1 };
+        globalNeuralNet = new SimpleNeuralNet( networkStruct);
+        globalPredNeuralNet = new SimpleNeuralNet(predNetworkStruct);
         for (int i = 0; i < popSize; i++)
         {
             GameObject animal = makeAnimal();
@@ -50,7 +56,7 @@ public class GeneticAlgo : MonoBehaviour
         }
         GameObject predator = makePredator();
         predators.Add(predator);
-        
+       
     }
 
     void Update()
@@ -60,6 +66,10 @@ public class GeneticAlgo : MonoBehaviour
         {
             animals.Add(makeAnimal());
             totalSpeed += 0.5f;
+        }
+        while (predators.Count < popSize / 10)
+        {
+            predators.Add(makePredator());
         }
         customTerrain.debug.text = "N° animals: " + animals.Count.ToString() +"\n" + "Avg Speed: " + (totalSpeed/animals.Count).ToString();
 
@@ -101,6 +111,7 @@ public class GeneticAlgo : MonoBehaviour
         animal.GetComponent<Animal>().Setup(customTerrain, this);
         animal.transform.position = position;
         animal.transform.Rotate(0.0f, UnityEngine.Random.value * 360.0f, 0.0f);
+        animal.GetComponent<Animal>().InheritBrain(globalNeuralNet, true);
         return animal;
     }
 
@@ -122,6 +133,7 @@ public class GeneticAlgo : MonoBehaviour
         predator.GetComponent<Predator>().Setup(customTerrain, this);
         predator.transform.position = position;
         predator.transform.Rotate(0.0f, UnityEngine.Random.value * 360.0f, 0.0f);
+        predator.GetComponent<Predator>().InheritBrain(globalPredNeuralNet, true);
         return predator;
     }
 
@@ -142,11 +154,24 @@ public class GeneticAlgo : MonoBehaviour
     {
         GameObject animal = makeAnimal(parent.transform.position);
         animal.GetComponent<Animal>().InheritBrain(parent.GetBrain(), mutate);
-        animal.GetComponent<Animal>().InheritAttributes(parent.GetSpeed(), mutate);
+        animal.GetComponent<Animal>().InheritAttributes(parent.GetSpeed(), parent.GetMaxVision(), mutate); ;
         animals.Add(animal);
-        totalSpeed += animal.GetComponent<Animal>().GetSpeed();
+        if (animal.GetComponent<Animal>().GetSpeed() < 0.1f)
+        {
+            totalSpeed += 0.1f;
+        }else
+         totalSpeed += animal.GetComponent<Animal>().GetSpeed();
+        globalNeuralNet = animal.GetComponent<Animal>().GetBrain();
     }
 
+    public void addPredatorOffspring(Predator parent)
+    {
+        GameObject predator = makePredator(parent.transform.position);
+        predator.GetComponent<Predator>().InheritBrain(parent.GetBrain(), mutate);
+        predator.GetComponent<Predator>().InheritAttributes(parent.GetSpeed(), mutate);
+        predators.Add(predator);
+        globalPredNeuralNet = predator.GetComponent<Predator>().GetBrain();
+    }
     /// <summary>
     /// Remove instance of an animal.
     /// </summary>
@@ -167,6 +192,10 @@ public class GeneticAlgo : MonoBehaviour
     public int getAnimalCount()
     {
         return animals.Count;
+    }
+    public int getPredatorCount()
+    {
+        return predators.Count;
     }
     public float getAverageSpeed()
     {

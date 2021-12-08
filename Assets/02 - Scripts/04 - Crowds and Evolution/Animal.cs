@@ -16,7 +16,7 @@ public class Animal : MonoBehaviour
 
     [Header("Energy parameters")]
     public float maxEnergy = 10.0f;
-    public float lossEnergy = 1.0f;
+    public float lossEnergy = 0.25f;
     public float gainEnergy = 10.0f;
     private float energy;
     private float speed = 0f;
@@ -86,7 +86,7 @@ public class Animal : MonoBehaviour
         int dy = (int)((tfm.position.z / terrainSize.y) * detailSize.y);
 
         // For each frame, we lose lossEnergy
-        energy -= lossEnergy * speed*speed;
+        energy -= lossEnergy * speed;
 
         // Update terrain info
         terrain.setAnimalPos(lastPos.x, lastPos.y, false);
@@ -109,9 +109,7 @@ public class Animal : MonoBehaviour
         // If the energy is below 0, the animal dies.
         if (energy < 0)
         {
-            energy = 0.0f;
-            genetic_algo.removeAnimal(this);
-            terrain.setAnimalPos(dx, dy, false);
+            GetEaten(dx, dy);
         }
 
         // Update the color of the animal as a function of the energy that it contains.
@@ -150,10 +148,7 @@ public class Animal : MonoBehaviour
             if (genetic_algo.showVision)
             {
                 Vector3 line_dir = Quaternion.Euler(0.0f, startingAngle + (stepAngle * i), 0.0f) * Vector3.forward;
-                Vector3 global_line_dir = tfm.TransformPoint(new Vector3(maxVision * line_dir.x, 0, maxVision * line_dir.z));
-                Debug.DrawLine(tfm.position, new Vector3(global_line_dir.x, 
-                    terrain.get(global_line_dir.x, global_line_dir.z),
-                    global_line_dir.z));
+                Debug.DrawLine(tfm.position, tfm.TransformPoint(new Vector3(maxVision * line_dir.x, 0, maxVision * line_dir.z)));
             }
 
             // Interate over vision length.
@@ -178,11 +173,17 @@ public class Animal : MonoBehaviour
                     if (genetic_algo.showVision)
                     {
                         Vector3 line_dir = Quaternion.Euler(0.0f, startingAngle + (stepAngle * i), 0.0f) * Vector3.forward;
-                        Vector3 global_line_dir = tfm.TransformPoint(new Vector3(distance * line_dir.x, 0, distance * line_dir.z));
-                        Debug.DrawLine(tfm.position, new Vector3(global_line_dir.x,
-                            terrain.get(global_line_dir.x, global_line_dir.z),
-                            global_line_dir.z), Color.red);
-                        
+                        Debug.DrawLine(tfm.position, tfm.TransformPoint(new Vector3(distance * line_dir.x, 0, distance * line_dir.z)), Color.red);
+                    }
+                    break;
+                }
+                if ((int)px >= 0 && (int)px < details.GetLength(1) && (int)py >= 0 && (int)py < details.GetLength(0) && terrain.GetPredatorPos((int)px,(int)py))
+                {
+                    vision[i] = -distance / maxVision;
+                    if (genetic_algo.showVision)
+                    {
+                        Vector3 line_dir = Quaternion.Euler(0.0f, startingAngle + (stepAngle * i), 0.0f) * Vector3.forward;
+                        Debug.DrawLine(tfm.position, tfm.TransformPoint(new Vector3(distance * line_dir.x, 0, distance * line_dir.z)), Color.green);
                     }
                     break;
                 }
@@ -212,11 +213,16 @@ public class Animal : MonoBehaviour
         if (mutate)
             brain.mutate(swapRate, mutateRate, swapStrength, mutateStrength);
     }
-    public void InheritAttributes(float parentSpeed,bool mutate)
+    public void InheritAttributes(float parentSpeed, float parentMaxVision ,bool mutate)
     {
         speed = parentSpeed;
-        if(mutate)
-            speed+= (2.0f * UnityEngine.Random.value - 1.0f) * 0.1f;
+        maxVision = parentMaxVision;
+        if (mutate)
+        {
+            speed += (2.0f * UnityEngine.Random.value - 1.0f) * 0.3f;
+            maxVision += 2.0f * UnityEngine.Random.value - 1.0f;
+            
+        }
     }
     public SimpleNeuralNet GetBrain()
     {
@@ -226,9 +232,19 @@ public class Animal : MonoBehaviour
     {
         return speed;
     }
+    public float GetMaxVision()
+    {
+        return maxVision;
+    }
     public float GetHealth()
     {
         return energy / maxEnergy;
     }
 
+    public void GetEaten(int dx, int dy)
+    {
+        energy = 0.0f;
+        genetic_algo.removeAnimal(this);
+        terrain.setAnimalPos(dx, dy, false);
+    }
 }

@@ -16,10 +16,12 @@ public class Graph : MonoBehaviour
 
     // A list of random values to draw
     private List<float> values;
+    private List<float> predValues;
     private List<float> speedValues;
 
     // The list the drawing function uses...
     private List<float> drawValues = new List<float>();
+    private List<float> predDrawValues = new List<float>();
     private List<float> speedDrawValues = new List<float>();
 
     // List of Windows
@@ -37,6 +39,7 @@ public class Graph : MonoBehaviour
 
         // Fill a list with ten random values
         values = new List<float>();
+        predValues = new List<float>();
         speedValues = new List<float>();
     }
 
@@ -48,6 +51,7 @@ public class Graph : MonoBehaviour
         {
             values.Add(genetic_algo.getAnimalCount()/3f);
             speedValues.Add(genetic_algo.getAverageSpeed()*300f);
+            predValues.Add(genetic_algo.getPredatorCount()/ 3f);
             counter = 0;
         }
     }
@@ -61,6 +65,7 @@ public class Graph : MonoBehaviour
         {
             // Set out drawValue list equal to the values list 
             drawValues = values;
+            predDrawValues = predValues;
             speedDrawValues = speedValues;
             windowRect = GUI.Window(0, windowRect, DrawGraph, "Population Evolution");
         }
@@ -92,7 +97,7 @@ public class Graph : MonoBehaviour
 
             // Draw the lines of the graph
             GL.Begin(GL.LINES);
-            GL.Color(Color.red);
+            GL.Color(Color.white);
 
             int valueIndex = drawValues.Count - 1;
             for (int i = (int)windowRect.width - 4; i > 3; i--)
@@ -110,7 +115,26 @@ public class Graph : MonoBehaviour
             }
             GL.End();
 
-            
+            //Predators
+            GL.Begin(GL.LINES);
+            GL.Color(Color.red);
+
+            valueIndex = predDrawValues.Count - 1;
+            for (int i = (int)windowRect.width - 4; i > 3; i--)
+            {
+                float y1 = 0;
+                float y2 = 0;
+                if (valueIndex > 0)
+                {
+                    y2 = predDrawValues[valueIndex];
+                    y1 = predDrawValues[valueIndex - 1];
+                }
+                GL.Vertex3(i, windowRect.height - 4 - y2, 0);
+                GL.Vertex3((i - 1), windowRect.height - 4 - y1, 0);
+                valueIndex -= 1;
+            }
+            GL.End();
+
             // Draw a black back ground Quad 
             GL.Begin(GL.QUADS);
             GL.Color(Color.grey);
