@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,6 +27,8 @@ public class CustomTerrain : MonoBehaviour {
     private int heightmap_width;
     private int heightmap_height;
     private float[,] heightmap_data;
+    private bool[,] predators_data;
+    private bool[,] animals_data;
     private int amap_width, amap_height;
     private int detail_width, detail_height;
     private int[,] detail_layer = null;
@@ -54,6 +57,7 @@ public class CustomTerrain : MonoBehaviour {
         detail_width = terrain_data.detailWidth;
         detail_height = terrain_data.detailHeight;
         detail_layer = terrain_data.GetDetailLayer(0, 0, detail_width, detail_height, 0);
+        animals_data = new bool[detail_width, detail_height];
         amap_width = terrain_data.alphamapWidth;
         amap_height = terrain_data.alphamapHeight;
         alphamaps = terrain_data.GetAlphamaps(0, 0, amap_width, amap_height);
@@ -168,6 +172,24 @@ public class CustomTerrain : MonoBehaviour {
         set((int)x, (int)z, val);
     }
 
+    public void setAnimalPos(int x, int z, bool b)
+    {
+        animals_data[x, z] = b;
+    }
+
+    public bool getAnimalPos(int x, int z)
+    {
+        return animals_data[x, z];
+    }
+    public void setPredatorPos(int x, int z, bool b)
+    {
+        predators_data[x, z] = b;
+    }
+
+    public bool getPredatorPos(int x, int z)
+    {
+        return predators_data[x, z];
+    }
     // Spawn a new object (tree)
     public void spawnObject(Vector3 loc, float scale, int proto_idx) {
         TreeInstance obj = new TreeInstance();

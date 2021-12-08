@@ -7057,6 +7057,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8107060311549103610}
   - component: {fileID: 8107060311548940699}
+  - component: {fileID: -6884585000120420849}
   m_Layer: 0
   m_Name: Quadruped - (Procedural)
   m_TagString: Untagged
@@ -7126,6 +7127,29 @@ MonoBehaviour:
   frontRightFoot: {fileID: 2954251902850376964}
   backLeftFoot: {fileID: 2954251904603069286}
   backRightFoot: {fileID: 2954251903069469998}
+--- !u!114 &-6884585000120420849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8107060311548940698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c23709d95c36b9246b496b78410c1a30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  swapRate: 0.01
+  mutateRate: 0.01
+  swapStrength: 10
+  mutateStrength: 0.5
+  maxAngle: 10
+  maxEnergy: 10
+  lossEnergy: 1
+  gainEnergy: 10
+  maxVision: 20
+  stepAngle: 10
+  nEyes: 5
 --- !u!1 &8107060311548940700
 GameObject:
   m_ObjectHideFlags: 0
