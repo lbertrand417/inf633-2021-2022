@@ -34,6 +34,7 @@ public class Animal : MonoBehaviour
     private int[,] details = null;
     private Vector2 detailSize;
     private Vector2 terrainSize;
+    private Vector2Int lastPos = new Vector2Int(0,0);
 
     // Animal.
     private Transform tfm;
@@ -87,6 +88,12 @@ public class Animal : MonoBehaviour
         // For each frame, we lose lossEnergy
         energy -= lossEnergy * speed*speed;
 
+        // Update terrain info
+        terrain.setAnimalPos(lastPos.x, lastPos.y, false);
+        terrain.setAnimalPos(dx, dy, true);
+        lastPos.x = dx;
+        lastPos.y = dy;
+
         // If the animal is located in the dimensions of the terrain and over a grass position (details[dy, dx] > 0), it eats it, gain energy and spawn an offspring.
         if ((dx >= 0) && dx < (details.GetLength(1)) && (dy >= 0) && (dy < details.GetLength(0)) && details[dy, dx] > 0)
         {
@@ -104,6 +111,7 @@ public class Animal : MonoBehaviour
         {
             energy = 0.0f;
             genetic_algo.removeAnimal(this);
+            terrain.setAnimalPos(dx, dy, false);
         }
 
         // Update the color of the animal as a function of the energy that it contains.
