@@ -148,7 +148,10 @@ public class Animal : MonoBehaviour
             if (genetic_algo.showVision)
             {
                 Vector3 line_dir = Quaternion.Euler(0.0f, startingAngle + (stepAngle * i), 0.0f) * Vector3.forward;
-                Debug.DrawLine(tfm.position, tfm.TransformPoint(new Vector3(maxVision * line_dir.x, 0, maxVision * line_dir.z)));
+                Vector3 global_line_dir = tfm.TransformPoint(new Vector3(maxVision * line_dir.x, 0, maxVision * line_dir.z));
+                Debug.DrawLine(tfm.position, new Vector3(global_line_dir.x,
+                    terrain.get(global_line_dir.x, global_line_dir.z),
+                    global_line_dir.z));
             }
 
             // Interate over vision length.
@@ -173,17 +176,24 @@ public class Animal : MonoBehaviour
                     if (genetic_algo.showVision)
                     {
                         Vector3 line_dir = Quaternion.Euler(0.0f, startingAngle + (stepAngle * i), 0.0f) * Vector3.forward;
-                        Debug.DrawLine(tfm.position, tfm.TransformPoint(new Vector3(distance * line_dir.x, 0, distance * line_dir.z)), Color.red);
+                        Vector3 global_line_dir = tfm.TransformPoint(new Vector3(distance * line_dir.x, 0, distance * line_dir.z));
+                        Debug.DrawLine(tfm.position, new Vector3(global_line_dir.x,
+                            terrain.get(global_line_dir.x, global_line_dir.z),
+                            global_line_dir.z), Color.red);
                     }
                     break;
                 }
+
                 if ((int)px >= 0 && (int)px < details.GetLength(1) && (int)py >= 0 && (int)py < details.GetLength(0) && terrain.GetPredatorPos((int)px,(int)py))
                 {
                     vision[i] = -distance / maxVision;
                     if (genetic_algo.showVision)
                     {
                         Vector3 line_dir = Quaternion.Euler(0.0f, startingAngle + (stepAngle * i), 0.0f) * Vector3.forward;
-                        Debug.DrawLine(tfm.position, tfm.TransformPoint(new Vector3(distance * line_dir.x, 0, distance * line_dir.z)), Color.green);
+                        Vector3 global_line_dir = tfm.TransformPoint(new Vector3(distance * line_dir.x, 0, distance * line_dir.z));
+                        Debug.DrawLine(tfm.position, new Vector3(global_line_dir.x,
+                            terrain.get(global_line_dir.x, global_line_dir.z),
+                            global_line_dir.z), Color.blue);
                     }
                     break;
                 }
