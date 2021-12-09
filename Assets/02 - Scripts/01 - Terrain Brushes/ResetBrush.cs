@@ -9,14 +9,6 @@ public class ResetBrush : TerrainBrush
 
     public override void draw(int x, int z)
     {
-        for (int zi = -radius; zi <= radius; zi++)
-        {
-            for (int xi = -radius; xi <= radius; xi++)
-            {
-                terrain.set(x + xi, z + zi,0);
-                
-
-            }
-        }
+        terrain.reset();
     }
 }

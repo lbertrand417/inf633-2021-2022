@@ -108,7 +108,7 @@ public class FabricIKQuadruped : MonoBehaviour
             {
                 // START TODO ###################
 
-                bonesLength[i] = (bones[i + 1].position - current.position).magnitude;
+                bonesLength[i] = Vector3.Magnitude(bones[i + 1].position - current.position);
                 completeLength += bonesLength[i];
 
                 // END TODO ###################
@@ -174,8 +174,8 @@ public class FabricIKQuadruped : MonoBehaviour
         // START TODO ###################
 
         // Change condition!
-        if ((target.position - bonesPositions[0]).magnitude > completeLength)
-        {
+        if (Vector3.Magnitude(target.position - bonesPositions[0]) > completeLength)
+        { 
             for (int i = 1; i < bones.Length; i++)
             {
                 bonesPositions[i] = bonesPositions[i - 1] + (target.position - bonesPositions[0]).normalized * bonesLength[i - 1];
@@ -238,9 +238,13 @@ public class FabricIKQuadruped : MonoBehaviour
 
 
                     if (i == bones.Length - 1)
+                    {
                         bonesPositions[i] = target.position;
+                    }
                     else
-                        bonesPositions[i] = bonesPositions[i + 1] + (bonesPositions[i] - bonesPositions[i + 1]).normalized * bonesLength[i];
+                    {
+                        bonesPositions[i] = bonesPositions[i + 1] + bonesLength[i] * (bonesPositions[i] - bonesPositions[i + 1]).normalized;
+                    }
                     // END TODO ###################
                 }
 
@@ -253,8 +257,8 @@ public class FabricIKQuadruped : MonoBehaviour
 
                     // START TODO ###################
 
-                    
-                    bonesPositions[i] = bonesPositions[i - 1] + (bonesPositions[i] - bonesPositions[i - 1]).normalized * bonesLength[i - 1]; ;
+
+                    bonesPositions[i] = bonesPositions[i - 1] + bonesLength[i - 1] * (bonesPositions[i] - bonesPositions[i - 1]).normalized;
 
                     // END TODO ###################
 

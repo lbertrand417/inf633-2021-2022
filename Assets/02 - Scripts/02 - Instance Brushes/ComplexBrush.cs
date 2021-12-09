@@ -8,16 +8,16 @@ public class ComplexBrush : InstanceBrush
     public enum shape_list { rectangle, circle };
     public shape_list shape;
 
-    public int freeSpace = 5;
-    public float maxHeight = 40;
-    public float maxAngle = 40;
+    public int freeSpace = 5; // Space around trees
+    public float maxHeight = 40; // Max height where the trees can appear
+    public float maxAngle = 40; // Max steepness 
     [Range(0, 1)]
     public float sparsity = 0;
 
-    [Range(2, 100)]
-    public float grovesSize = 2;
+    [Range(1, 50)]
+    public float grovesSize = 2; // Size of the tree
 
-    public GameObject[] instances = new GameObject[3];
+    public GameObject[] instances = new GameObject[1]; // Instances list
 
 
     public override void draw(float x, float z)
@@ -27,7 +27,8 @@ public class ComplexBrush : InstanceBrush
         float dz = 0;
 
         // Choose instance
-        terrain.object_prefab = instances[UnityEngine.Random.Range(1, 3)];
+        terrain.object_prefab = instances[UnityEngine.Random.Range(1, instances.Length)];
+        terrain.max_scale = grovesSize;
 
         // Use Perlin noise for object position
         float scale = radius / 2f;
@@ -85,7 +86,7 @@ public class ComplexBrush : InstanceBrush
             }
         }
 
-        // Check steepness
+        // Check height and steepness
         if (!(terrain.get(x, z) < maxHeight && terrain.getSteepness(x, z) < maxAngle))
         {
             res = false;
