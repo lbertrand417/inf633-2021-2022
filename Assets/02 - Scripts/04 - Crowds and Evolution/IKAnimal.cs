@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Animal : MonoBehaviour
+[RequireComponent(typeof(QuadrupedProceduralMotion))]
+public class IKAnimal : MonoBehaviour
 {
-
     [Header("Animal parameters")]
     public float swapRate = 0.01f;
     public float mutateRate = 0.01f;
@@ -34,19 +34,22 @@ public class Animal : MonoBehaviour
     protected int[,] details = null;
     protected Vector2 detailSize;
     protected Vector2 terrainSize;
-    protected Vector2Int lastPos = new Vector2Int(0,0);
+    protected Vector2Int lastPos = new Vector2Int(0, 0);
 
     // Animal.
     protected Transform tfm;
     protected float[] vision;
-    protected CapsuleAutoController controller;
+    //protected CapsuleAutoController controller;
     protected int eatCount = 0;
     // Genetic alg.
-    protected GeneticAlgo genetic_algo = null;
+    protected IKGeneticAlgo genetic_algo = null;
 
     // Renderer.
     protected Material[] mat = null;
     protected Color[] matColors = null;
+
+    public QuadrupedProceduralMotion ik;
+    public GameObject goal;
 
     void Start()
     {
@@ -58,7 +61,7 @@ public class Animal : MonoBehaviour
 
         // Renderer used to update animal color.
         // It needs to be updated for more complex models.
-        controller = GetComponent<CapsuleAutoController>();
+        //controller = GetComponent<CapsuleAutoController>();
 
         MeshRenderer[] renderer = GetComponentsInChildren<MeshRenderer>();
         mat = new Material[renderer.Length];
@@ -73,7 +76,12 @@ public class Animal : MonoBehaviour
                 i++;
             }
         }
-            
+
+        // Set goal
+        ik = this.GetComponent<QuadrupedProceduralMotion>();
+        GameObject goal = new GameObject();
+        goal.transform.position = tfm.position;
+        ik.goal = gameObject.transform;
     }
 
     void Update()
@@ -93,7 +101,7 @@ public class Animal : MonoBehaviour
             return;
         }
 
-        controller.max_speed = speed;
+        //controller.max_speed = speed;
         // Retrieve animal location in the heighmap
         int dx = (int)((tfm.position.x / terrainSize.x) * detailSize.x);
         int dy = (int)((tfm.position.z / terrainSize.y) * detailSize.y);
@@ -104,7 +112,7 @@ public class Animal : MonoBehaviour
         // Update terrain info
         terrain.setAnimalPos(lastPos.x, lastPos.y, false);
         terrain.setAnimalPos(dx, dy, true);
-       
+
 
         // If the animal is located in the dimensions of the terrain and over a grass position (details[dy, dx] > 0), it eats it, gain energy and spawn an offspring.
         if ((dx >= 0) && dx < (details.GetLength(1)) && (dy >= 0) && (dy < details.GetLength(0)) && details[dy, dx] > 0)
@@ -115,7 +123,7 @@ public class Animal : MonoBehaviour
             if (energy > maxEnergy)
                 energy = maxEnergy;
             eatCount++;
-           // if(eatCount%3==0 || eatCount ==1)
+            // if(eatCount%3==0 || eatCount ==1)
             genetic_algo.addOffspring(this);
         }
 
@@ -128,10 +136,10 @@ public class Animal : MonoBehaviour
         // Update the color of the animal as a function of the energy that it contains.
         if (mat != null)
         {
-            for(int i = 0; i<mat.Length; i++)
-                mat[i].color = matColors[i]* (energy / maxEnergy);
+            for (int i = 0; i < mat.Length; i++)
+                mat[i].color = matColors[i] * (energy / maxEnergy);
         }
-            
+
 
         // 1. Update receptor.
         UpdateVision();
@@ -141,9 +149,11 @@ public class Animal : MonoBehaviour
 
         // 3. Act using actuators.
         float angle = (output[0] * 2.0f - 1.0f) * maxAngle;
-        tfm.Rotate(0.0f, angle*speed, 0.0f);
+        //tfm.Rotate(0.0f, angle * speed, 0.0f);
+        ik.goal.Translate(0.1f, 0.0f, 0.2f);
         lastPos.x = dx;
         lastPos.y = dy;
+
 
     }
 
@@ -202,7 +212,7 @@ public class Animal : MonoBehaviour
                     break;
                 }
 
-                if ((int)px >= 0 && (int)px < details.GetLength(1) && (int)py >= 0 && (int)py < details.GetLength(0) && terrain.GetPredatorPos((int)px,(int)py))
+                if ((int)px >= 0 && (int)px < details.GetLength(1) && (int)py >= 0 && (int)py < details.GetLength(0) && terrain.GetPredatorPos((int)px, (int)py))
                 {
                     vision[i] = -distance / maxVision;
                     if (genetic_algo.showVision)
@@ -220,7 +230,7 @@ public class Animal : MonoBehaviour
         }
     }
 
-    public void Setup(CustomTerrain ct, GeneticAlgo ga)
+    public void Setup(CustomTerrain ct, IKGeneticAlgo ga)
     {
         terrain = ct;
         genetic_algo = ga;
@@ -241,7 +251,7 @@ public class Animal : MonoBehaviour
         if (mutate)
             brain.mutate(swapRate, mutateRate, swapStrength, mutateStrength);
     }
-    public void InheritAttributes(float parentSpeed, float parentMaxVision ,bool mutate)
+    public void InheritAttributes(float parentSpeed, float parentMaxVision, bool mutate)
     {
         speed = parentSpeed;
         maxVision = parentMaxVision;
@@ -249,7 +259,7 @@ public class Animal : MonoBehaviour
         {
             speed += (2.0f * UnityEngine.Random.value - 1.0f) * 0.15f;
             maxVision += 2.0f * UnityEngine.Random.value - 1.0f;
-            
+
         }
     }
     public SimpleNeuralNet GetBrain()

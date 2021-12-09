@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Animal : MonoBehaviour
+public class IKPredator : MonoBehaviour
 {
 
     [Header("Animal parameters")]
@@ -15,38 +15,40 @@ public class Animal : MonoBehaviour
     public float maxAngle = 10.0f;
 
     [Header("Energy parameters")]
-    public float maxEnergy = 10.0f;
-    public float lossEnergy = 0.2f;
-    public float gainEnergy = 10.0f;
-    protected float energy;
-    protected float speed = 0f;
+    public float maxEnergy = 30.0f;
+    public float lossEnergy = 0.3f;
+    public float gainEnergy = 30.0f;
+    private float energy;
+    private float speed = 0f;
 
     [Header("Sensor - Vision")]
-    public float maxVision = 20.0f;
-    public float stepAngle = 10.0f;
-    public int nEyes = 5;
+    public float maxVision = 60.0f;
+    public float stepAngle = 5.0f;
+    public int nEyes = 12;
 
-    protected int[] networkStruct;
-    protected SimpleNeuralNet brain = null;
+    private int[] networkStruct;
+    private SimpleNeuralNet brain = null;
 
     // Terrain.
-    protected CustomTerrain terrain = null;
-    protected int[,] details = null;
-    protected Vector2 detailSize;
-    protected Vector2 terrainSize;
-    protected Vector2Int lastPos = new Vector2Int(0,0);
+    private CustomTerrain terrain = null;
+    private int[,] details = null;
+    private Vector2 detailSize;
+    private Vector2 terrainSize;
+    private Vector2Int lastPos = new Vector2Int(0, 0);
 
     // Animal.
-    protected Transform tfm;
-    protected float[] vision;
-    protected CapsuleAutoController controller;
-    protected int eatCount = 0;
+    private Transform tfm;
+    private float[] vision;
+    //private CapsuleAutoController controller;
+
+    private CapsuleCollider collider;
+
     // Genetic alg.
-    protected GeneticAlgo genetic_algo = null;
+    private IKGeneticAlgo genetic_algo = null;
 
     // Renderer.
-    protected Material[] mat = null;
-    protected Color[] matColors = null;
+    private Material mat = null;
+    private Color matColor;
 
     void Start()
     {
@@ -56,24 +58,22 @@ public class Animal : MonoBehaviour
         energy = maxEnergy;
         tfm = transform;
 
+        Vector3 objectScale = tfm.localScale;
+        // Sets the local scale of game object
+        //tfm.localScale = new Vector3(objectScale.x * 3, objectScale.y * 3, objectScale.z * 3);
+
         // Renderer used to update animal color.
         // It needs to be updated for more complex models.
-        controller = GetComponent<CapsuleAutoController>();
+        //controller = GetComponent<CapsuleAutoController>();
 
-        MeshRenderer[] renderer = GetComponentsInChildren<MeshRenderer>();
-        mat = new Material[renderer.Length];
-        matColors = new Color[renderer.Length];
+        collider = GetComponent<CapsuleCollider>();
+
+        MeshRenderer renderer = GetComponentInChildren<MeshRenderer>();
         if (renderer != null)
         {
-            int i = 0;
-            foreach (MeshRenderer r in renderer)
-            {
-                mat[i] = r.material;
-                matColors[i] = r.material.color;
-                i++;
-            }
+            mat = renderer.material;
+            matColor = renderer.material.color;
         }
-            
     }
 
     void Update()
@@ -93,7 +93,7 @@ public class Animal : MonoBehaviour
             return;
         }
 
-        controller.max_speed = speed;
+        //controller.max_speed = speed;
         // Retrieve animal location in the heighmap
         int dx = (int)((tfm.position.x / terrainSize.x) * detailSize.x);
         int dy = (int)((tfm.position.z / terrainSize.y) * detailSize.y);
@@ -102,36 +102,28 @@ public class Animal : MonoBehaviour
         energy -= lossEnergy * speed;
 
         // Update terrain info
-        terrain.setAnimalPos(lastPos.x, lastPos.y, false);
-        terrain.setAnimalPos(dx, dy, true);
-       
+        terrain.setPredatorPos(lastPos.x, lastPos.y, false);
+        terrain.setPredatorPos(dx, dy, true);
+        lastPos.x = dx;
+        lastPos.y = dy;
 
-        // If the animal is located in the dimensions of the terrain and over a grass position (details[dy, dx] > 0), it eats it, gain energy and spawn an offspring.
-        if ((dx >= 0) && dx < (details.GetLength(1)) && (dy >= 0) && (dy < details.GetLength(0)) && details[dy, dx] > 0)
+        // To clean the animal pos array just in case
+        if (terrain.getAnimalPos(dx, dy))
         {
-            // Eat (remove) the grass and gain energy.
-            details[dy, dx] = 0;
-            energy += gainEnergy;
-            if (energy > maxEnergy)
-                energy = maxEnergy;
-            eatCount++;
-           // if(eatCount%3==0 || eatCount ==1)
-            genetic_algo.addOffspring(this);
+            terrain.setAnimalPos(dx, dy, false);
         }
 
         // If the energy is below 0, the animal dies.
         if (energy < 0)
         {
-            GetEaten(dx, dy);
+            energy = 0.0f;
+            terrain.setPredatorPos(dx, dy, false);
+            genetic_algo.removePredator(this);
         }
 
         // Update the color of the animal as a function of the energy that it contains.
         if (mat != null)
-        {
-            for(int i = 0; i<mat.Length; i++)
-                mat[i].color = matColors[i]* (energy / maxEnergy);
-        }
-            
+            mat.color = matColor * (energy / maxEnergy);
 
         // 1. Update receptor.
         UpdateVision();
@@ -141,9 +133,9 @@ public class Animal : MonoBehaviour
 
         // 3. Act using actuators.
         float angle = (output[0] * 2.0f - 1.0f) * maxAngle;
-        tfm.Rotate(0.0f, angle*speed, 0.0f);
-        lastPos.x = dx;
-        lastPos.y = dy;
+        tfm.Rotate(0.0f, angle * speed, 0.0f);
+
+
 
     }
 
@@ -188,7 +180,7 @@ public class Animal : MonoBehaviour
                 else if (py >= detailSize.y)
                     py -= detailSize.y;
 
-                if ((int)px >= 0 && (int)px < details.GetLength(1) && (int)py >= 0 && (int)py < details.GetLength(0) && details[(int)py, (int)px] > 0)
+                if ((int)px >= 0 && (int)px < details.GetLength(1) && (int)py >= 0 && (int)py < details.GetLength(0) && terrain.getAnimalPos((int)px, (int)py))
                 {
                     vision[i] = distance / maxVision;
                     if (genetic_algo.showVision)
@@ -202,25 +194,11 @@ public class Animal : MonoBehaviour
                     break;
                 }
 
-                if ((int)px >= 0 && (int)px < details.GetLength(1) && (int)py >= 0 && (int)py < details.GetLength(0) && terrain.GetPredatorPos((int)px,(int)py))
-                {
-                    vision[i] = -distance / maxVision;
-                    if (genetic_algo.showVision)
-                    {
-                        Vector3 line_dir = Quaternion.Euler(0.0f, startingAngle + (stepAngle * i), 0.0f) * Vector3.forward;
-                        Vector3 global_line_dir = tfm.TransformPoint(new Vector3(distance * line_dir.x, 0, distance * line_dir.z));
-                        Debug.DrawLine(tfm.position, new Vector3(global_line_dir.x,
-                            terrain.get(global_line_dir.x, global_line_dir.z),
-                            global_line_dir.z), Color.blue);
-                    }
-                    break;
-                }
-
             }
         }
     }
 
-    public void Setup(CustomTerrain ct, GeneticAlgo ga)
+    public void Setup(CustomTerrain ct, IKGeneticAlgo ga)
     {
         terrain = ct;
         genetic_algo = ga;
@@ -241,16 +219,11 @@ public class Animal : MonoBehaviour
         if (mutate)
             brain.mutate(swapRate, mutateRate, swapStrength, mutateStrength);
     }
-    public void InheritAttributes(float parentSpeed, float parentMaxVision ,bool mutate)
+    public void InheritAttributes(float parentSpeed, bool mutate)
     {
         speed = parentSpeed;
-        maxVision = parentMaxVision;
         if (mutate)
-        {
-            speed += (2.0f * UnityEngine.Random.value - 1.0f) * 0.15f;
-            maxVision += 2.0f * UnityEngine.Random.value - 1.0f;
-            
-        }
+            speed += (2.0f * UnityEngine.Random.value - 1.0f) * 0.1f;
     }
     public SimpleNeuralNet GetBrain()
     {
@@ -260,20 +233,27 @@ public class Animal : MonoBehaviour
     {
         return speed;
     }
-    public float GetMaxVision()
-    {
-        return maxVision;
-    }
     public float GetHealth()
     {
         return energy / maxEnergy;
     }
 
-    public void GetEaten(int dx, int dy)
+    private void OnTriggerEnter(Collider other)
     {
-        energy = 0.0f;
-        genetic_algo.removeAnimal(this);
-        terrain.setAnimalPos(dx, dy, false);
-        terrain.setAnimalPos(lastPos.x, lastPos.y, false);
+        if (other.gameObject.CompareTag("Animal"))
+        {
+            energy += gainEnergy;
+            if (energy > maxEnergy)
+                energy = maxEnergy;
+
+
+            genetic_algo.addPredatorOffspring(this);
+
+            IKAnimal animal = other.gameObject.GetComponent<IKAnimal>();
+            int dx = (int)((tfm.position.x / terrainSize.x) * detailSize.x);
+            int dy = (int)((tfm.position.z / terrainSize.y) * detailSize.y);
+            animal.GetEaten(dx, dy);
+        }
     }
+
 }

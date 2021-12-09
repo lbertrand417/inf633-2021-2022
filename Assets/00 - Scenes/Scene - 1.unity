@@ -554,7 +554,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 9.1837e-41, w: -9.05e-43}
+  m_BoundingSphereOverride: {x: -2.4405384e-30, y: 9.188e-41, z: 1.83671e-39, w: 2.4257473e-29}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -696,6 +696,7 @@ GameObject:
   - component: {fileID: 374040436}
   - component: {fileID: 374040435}
   - component: {fileID: 374040439}
+  - component: {fileID: 374040441}
   - component: {fileID: 374040440}
   m_Layer: 3
   m_Name: Terrain
@@ -908,15 +909,16 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 374040426}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 58addec6626ef40dfb932e8efbbb6236, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   popSize: 40
-  animalPrefab: {fileID: 6733265589692463594, guid: b8a4860b06bc8b44fa2e523916edd3dd,
+  predSize: 8
+  animalPrefab: {fileID: 8107060311548940698, guid: 292e0cc1c13240549bc0ea73726cca30,
     type: 3}
-  predatorPrefab: {fileID: 6733265589692463594, guid: 413dd81800e38da4ba53c3f205096052,
+  predatorPrefab: {fileID: 8107060311548940698, guid: 292e0cc1c13240549bc0ea73726cca30,
     type: 3}
   showVision: 1
   mutate: 1
@@ -936,6 +938,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2dcbe45aee16ba649b56d801f73d2257, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &374040441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 374040426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f24c4402242d8fc408425ed9b0afad3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  popSize: 40
+  predSize: 8
+  animalPrefab: {fileID: 8107060311548940698, guid: 292e0cc1c13240549bc0ea73726cca30,
+    type: 3}
+  predatorPrefab: {fileID: 6733265589692463594, guid: 413dd81800e38da4ba53c3f205096052,
+    type: 3}
+  showVision: 0
+  mutate: 1
+  vegetationGrowthRate: 1
+  currentGrowth: 0
+  maxVegetationHeight: 50
+  maxVegetationSteep: 25
 --- !u!1 &534669902
 GameObject:
   m_ObjectHideFlags: 0
@@ -2226,7 +2252,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2137751596}
-  m_LocalRotation: {x: 0.10257358, y: 0.31284562, z: -0.03400642, w: 0.94363654}
+  m_LocalRotation: {x: 0.10257357, y: 0.3128456, z: -0.03400641, w: 0.94363654}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
