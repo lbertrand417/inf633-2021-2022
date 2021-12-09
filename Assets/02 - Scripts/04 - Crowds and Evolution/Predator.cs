@@ -16,7 +16,7 @@ public class Predator : MonoBehaviour
 
     [Header("Energy parameters")]
     public float maxEnergy = 30.0f;
-    public float lossEnergy = 0.5f;
+    public float lossEnergy = 0.3f;
     public float gainEnergy = 30.0f;
     private float energy;
     private float speed = 0f;
