@@ -4,12 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GeneticAlgo : MonoBehaviour
+public class IKGeneticAlgo : MonoBehaviour
 {
-    
     [Header("Genetic Algorithm parameters")]
     public int popSize = 40;
-    public int predSize = 8; 
+    public int predSize = 8;
     public GameObject animalPrefab;
     public GameObject predatorPrefab;
     public bool showVision = false;
@@ -49,7 +48,7 @@ public class GeneticAlgo : MonoBehaviour
         predators = new List<GameObject>();
         int[] networkStruct = new int[] { 5, 5, 1 };
         int[] predNetworkStruct = new int[] { 12, 5, 1 };
-        globalNeuralNet = new SimpleNeuralNet( networkStruct);
+        globalNeuralNet = new SimpleNeuralNet(networkStruct);
         globalPredNeuralNet = new SimpleNeuralNet(predNetworkStruct);
         for (int i = 0; i < popSize; i++)
         {
@@ -60,7 +59,7 @@ public class GeneticAlgo : MonoBehaviour
         }
         GameObject predator = makePredator();
         predators.Add(predator);
-       
+
     }
 
     void Update()
@@ -76,9 +75,9 @@ public class GeneticAlgo : MonoBehaviour
         {
             predators.Add(makePredator());
         }
-        customTerrain.debug.text = "N° animals: " + animals.Count.ToString() +"\n"
-            + "Avg Speed: " + (getAverageSpeed()).ToString() + "\n" 
-            + "Avg Vision Dist: " + (getAverageMaxVision()).ToString();
+        customTerrain.debug.text = "N° animals: " + animals.Count.ToString() + "\n"
+            + "Avg Speed: " + (totalSpeed / animals.Count).ToString() + "\n"
+            + "Avg Vision Dist: " + (totalMaxVision / animals.Count).ToString();
 
         // Update grass elements/food resources.
         updateResources();
@@ -98,7 +97,7 @@ public class GeneticAlgo : MonoBehaviour
             int y = (int)(UnityEngine.Random.value * detail_sz.y);
             float tx = (float)x / detail_sz.x * width;
             float ty = (float)y / detail_sz.y * height;
-            if (customTerrain.get(tx,ty) < maxVegetationHeight && customTerrain.getSteepness(tx,ty)<maxVegetationSteep)
+            if (customTerrain.get(tx, ty) < maxVegetationHeight && customTerrain.getSteepness(tx, ty) < maxVegetationSteep)
             {
                 details[y, x] = 1;
             }
@@ -115,10 +114,10 @@ public class GeneticAlgo : MonoBehaviour
     public GameObject makeAnimal(Vector3 position)
     {
         GameObject animal = Instantiate(animalPrefab, transform);
-        animal.GetComponent<Animal>().Setup(customTerrain, this);
+        animal.GetComponent<IKAnimal>().Setup(customTerrain, this);
         animal.transform.position = position;
         animal.transform.Rotate(0.0f, UnityEngine.Random.value * 360.0f, 0.0f);
-        animal.GetComponent<Animal>().InheritBrain(globalNeuralNet, true);
+        animal.GetComponent<IKAnimal>().InheritBrain(globalNeuralNet, true);
         return animal;
     }
 
@@ -137,10 +136,10 @@ public class GeneticAlgo : MonoBehaviour
     public GameObject makePredator(Vector3 position)
     {
         GameObject predator = Instantiate(predatorPrefab, transform);
-        predator.GetComponent<Predator>().Setup(customTerrain, this);
+        predator.GetComponent<IKPredator>().Setup(customTerrain, this);
         predator.transform.position = position;
         predator.transform.Rotate(0.0f, UnityEngine.Random.value * 360.0f, 0.0f);
-        predator.GetComponent<Predator>().InheritBrain(globalPredNeuralNet, true);
+        predator.GetComponent<IKPredator>().InheritBrain(globalPredNeuralNet, true);
         return predator;
     }
 
@@ -157,42 +156,45 @@ public class GeneticAlgo : MonoBehaviour
     /// Method to add an animal inherited from anothed. It spawns where the parent was.
     /// </summary>
     /// <param name="parent"></param>
-    public void addOffspring(Animal parent)
+    public void addOffspring(IKAnimal parent)
     {
         GameObject animal = makeAnimal(parent.transform.position);
-        animal.GetComponent<Animal>().InheritBrain(parent.GetBrain(), mutate);
-        animal.GetComponent<Animal>().InheritAttributes(parent.GetSpeed(), parent.GetMaxVision(), mutate); ;
+        animal.GetComponent<IKAnimal>().InheritBrain(parent.GetBrain(), mutate);
+        animal.GetComponent<IKAnimal>().InheritAttributes(parent.GetSpeed(), parent.GetMaxVision(), mutate); ;
         animals.Add(animal);
-        if (animal.GetComponent<Animal>().GetSpeed() < 0.1f)
+        if (animal.GetComponent<IKAnimal>().GetSpeed() < 0.1f)
         {
             totalSpeed += 0.1f;
-        }else
-         totalSpeed += animal.GetComponent<Animal>().GetSpeed();
-        totalMaxVision += animal.GetComponent<Animal>().GetMaxVision();
-        globalNeuralNet = animal.GetComponent<Animal>().GetBrain();
+        }
+        else
+            totalSpeed += animal.GetComponent<IKAnimal>().GetSpeed();
+        totalMaxVision += animal.GetComponent<IKAnimal>().GetMaxVision();
+        globalNeuralNet = animal.GetComponent<IKAnimal>().GetBrain();
     }
 
-    public void addPredatorOffspring(Predator parent)
+    public void addPredatorOffspring(IKPredator parent)
     {
         GameObject predator = makePredator(parent.transform.position);
-        predator.GetComponent<Predator>().InheritBrain(parent.GetBrain(), mutate);
-        predator.GetComponent<Predator>().InheritAttributes(parent.GetSpeed(), mutate);
+        predator.GetComponent<IKPredator>().InheritBrain(parent.GetBrain(), mutate);
+        predator.GetComponent<IKPredator>().InheritAttributes(parent.GetSpeed(), mutate);
         predators.Add(predator);
-        globalPredNeuralNet = predator.GetComponent<Predator>().GetBrain();
+        globalPredNeuralNet = predator.GetComponent<IKPredator>().GetBrain();
     }
     /// <summary>
     /// Remove instance of an animal.
     /// </summary>
     /// <param name="animal"></param>
-    public void removeAnimal(Animal animal)
+    public void removeAnimal(IKAnimal animal)
     {
         animals.Remove(animal.transform.gameObject);
-        totalSpeed -= animal.GetComponent<Animal>().GetSpeed();
-        totalMaxVision -= animal.GetComponent<Animal>().GetMaxVision();
+        totalSpeed -= animal.GetComponent<IKAnimal>().GetSpeed();
+        totalMaxVision -= animal.GetComponent<IKAnimal>().GetMaxVision();
+        Destroy(animal.goal.gameObject);
+        // Destroy red balls
         Destroy(animal.transform.gameObject);
     }
 
-    public void removePredator(Predator predator)
+    public void removePredator(IKPredator predator)
     {
         predators.Remove(predator.transform.gameObject);
         Destroy(predator.transform.gameObject);
@@ -208,10 +210,10 @@ public class GeneticAlgo : MonoBehaviour
     }
     public float getAverageSpeed()
     {
-        return Mathf.Max(totalSpeed/animals.Count,0.1f);
+        return totalSpeed / animals.Count;
     }
     public float getAverageMaxVision()
     {
-        return Mathf.Max(totalMaxVision / animals.Count,10f);
+        return totalMaxVision / animals.Count;
     }
 }

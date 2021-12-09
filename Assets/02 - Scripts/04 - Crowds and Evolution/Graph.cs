@@ -28,12 +28,12 @@ public class Graph : MonoBehaviour
     private bool showWindow0 = false;
 
     // Genetic alg.
-    private GeneticAlgo genetic_algo = null;
+    private IKGeneticAlgo genetic_algo = null;
     private int counter = 0;
     // Start is called before the first frame update
     void Start()
     {
-        genetic_algo = GetComponent<GeneticAlgo>();
+        genetic_algo = GetComponent<IKGeneticAlgo>();
         mat = new Material(Shader.Find("Hidden/Internal-Colored"));
         // Should check for material but I'll leave that to you..
 
