@@ -16,7 +16,7 @@ public class Animal : MonoBehaviour
 
     [Header("Energy parameters")]
     public float maxEnergy = 10.0f;
-    public float lossEnergy = 0.2f;
+    public float lossEnergy = 0.1f;
     public float gainEnergy = 10.0f;
     private float energy;
     private float speed = 0f;
@@ -93,7 +93,7 @@ public class Animal : MonoBehaviour
             return;
         }
 
-        controller.max_speed = speed;
+        controller.max_speed = speed/2;
         // Retrieve animal location in the heighmap
         int dx = (int)((tfm.position.x / terrainSize.x) * detailSize.x);
         int dy = (int)((tfm.position.z / terrainSize.y) * detailSize.y);
@@ -201,10 +201,9 @@ public class Animal : MonoBehaviour
                     }
                     break;
                 }
-
                 if ((int)px >= 0 && (int)px < details.GetLength(1) && (int)py >= 0 && (int)py < details.GetLength(0) && terrain.GetPredatorPos((int)px,(int)py))
                 {
-                    vision[i] = -distance / maxVision;
+                    vision[i] = 1+ distance / maxVision;
                     if (genetic_algo.showVision)
                     {
                         Vector3 line_dir = Quaternion.Euler(0.0f, startingAngle + (stepAngle * i), 0.0f) * Vector3.forward;
