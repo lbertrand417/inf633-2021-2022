@@ -16,7 +16,7 @@ public class Predator : MonoBehaviour
 
     [Header("Energy parameters")]
     public float maxEnergy = 30.0f;
-    public float lossEnergy = 0.3f;
+    public float lossEnergy = 0.5f;
     public float gainEnergy = 30.0f;
     private float energy;
     private float speed = 0f;
@@ -98,7 +98,7 @@ public class Predator : MonoBehaviour
         int dy = (int)((tfm.position.z / terrainSize.y) * detailSize.y);
 
         // For each frame, we lose lossEnergy
-         energy -= lossEnergy * speed;
+         energy -= lossEnergy * speed/2;
 
         // Update terrain info
         terrain.setPredatorPos(lastPos.x, lastPos.y, false);
