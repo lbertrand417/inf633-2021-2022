@@ -20,25 +20,25 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
-  m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
-  m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
+  m_AmbientSkyColor: {r: 0.76792455, g: 0.84528303, b: 1, a: 1}
+  m_AmbientEquatorColor: {r: 0.06657172, g: 0.12119875, b: 0.18867922, a: 1}
+  m_AmbientGroundColor: {r: 0.24414316, g: 0.3301887, b: 0.010590936, a: 1}
   m_AmbientIntensity: 1
-  m_AmbientMode: 0
-  m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_AmbientMode: 1
+  m_SubtractiveShadowColor: {r: 0.41304737, g: 0.46969643, b: 0.6132076, a: 1}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 4468cf691a0d9e74183ca9beb3c7c990, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
   m_HaloTexture: {fileID: 0}
   m_SpotCookie: {fileID: 10001, guid: 0000000000000000e000000000000000, type: 0}
-  m_DefaultReflectionMode: 0
+  m_DefaultReflectionMode: 1
   m_DefaultReflectionResolution: 128
   m_ReflectionBounces: 1
-  m_ReflectionIntensity: 1
+  m_ReflectionIntensity: 0.287
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.07492893, g: 0.1920355, b: 0.2796331, a: 0.287}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -508,8 +508,8 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 0.9356904, b: 0.65471697, a: 1}
-  m_Intensity: 1
+  m_Color: {r: 1, g: 0.95437396, b: 0.7490566, a: 1}
+  m_Intensity: 1.5
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -554,7 +554,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 9.1837e-41, w: -9.05e-43}
+  m_BoundingSphereOverride: {x: 0, y: 3e-45, z: NaN, w: 151.03978}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -566,13 +566,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 170076733}
-  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
+  m_LocalRotation: {x: 0.9411737, y: -0.020328214, z: 0.057564706, w: 0.33236304}
   m_LocalPosition: {x: 0, y: 5.11, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 141.1, y: -7, z: 0}
 --- !u!4 &223894168 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6733265589692463591, guid: b8a4860b06bc8b44fa2e523916edd3dd,
@@ -914,6 +914,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   popSize: 40
+  predSize: 8
   animalPrefab: {fileID: 6733265589692463594, guid: b8a4860b06bc8b44fa2e523916edd3dd,
     type: 3}
   predatorPrefab: {fileID: 6733265589692463594, guid: 413dd81800e38da4ba53c3f205096052,
@@ -1620,7 +1621,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1540813086}
-  m_LocalRotation: {x: 0.06822833, y: 0.3138744, z: -0.022619864, w: 0.94673973}
+  m_LocalRotation: {x: 0.06822833, y: 0.3138744, z: -0.02261986, w: 0.94673973}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2226,7 +2227,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2137751596}
-  m_LocalRotation: {x: 0.10257358, y: 0.31284562, z: -0.03400642, w: 0.94363654}
+  m_LocalRotation: {x: 0.10257356, y: 0.31284556, z: -0.034006406, w: 0.94363654}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
