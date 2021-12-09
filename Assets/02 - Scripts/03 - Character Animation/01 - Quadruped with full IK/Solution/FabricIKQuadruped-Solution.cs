@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FabricIKQuadruped : MonoBehaviour
+public class FabricIKQuadrupedSol : MonoBehaviour
 {
     [Header("Chain Settings")]
     public int chainLength = 2; // Number of spaces between the bone positions.

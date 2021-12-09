@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class QuadrupedProceduralMotion : MonoBehaviour
+public class QuadrupedProceduralMotionSol : MonoBehaviour
 {
     [Header("Goal")]
     public Transform goal; // The character will move towards this goal.

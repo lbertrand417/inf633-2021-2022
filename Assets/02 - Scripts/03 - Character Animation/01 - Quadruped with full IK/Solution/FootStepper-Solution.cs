@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FootStepper : MonoBehaviour
+public class FootStepperSol : MonoBehaviour
 {
     [Header("Stepper Settings")]
     public Transform homeTransform; // The position and rotation from which we want to stay in range (represented as the blue chip).

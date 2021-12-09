@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
-public class PlayerControllerIKFeetPlacementTask : MonoBehaviour
+public class PlayerControllerIKFeetPlacementTaskSol : MonoBehaviour
 {
     public Animator anim;
     public CharacterController controller;

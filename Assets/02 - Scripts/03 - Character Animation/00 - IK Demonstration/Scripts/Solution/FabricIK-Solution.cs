@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-public class FabricIK : MonoBehaviour
+public class FabricIKSol : MonoBehaviour
 {
     [Header("Chain Settings")]
     public int chainLength = 3; // Number of spaces between the bone positions.
