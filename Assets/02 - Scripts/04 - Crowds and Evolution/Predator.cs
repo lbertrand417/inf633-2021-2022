@@ -16,15 +16,15 @@ public class Predator : MonoBehaviour
 
     [Header("Energy parameters")]
     public float maxEnergy = 30.0f;
-    public float lossEnergy = 1.0f;
+    public float lossEnergy = 0.3f;
     public float gainEnergy = 30.0f;
     private float energy;
     private float speed = 0f;
     
     [Header("Sensor - Vision")]
-    public float maxVision = 50.0f;
-    public float stepAngle = 10.0f;
-    public int nEyes = 6;
+    public float maxVision = 60.0f;
+    public float stepAngle = 5.0f;
+    public int nEyes = 12;
 
     private int[] networkStruct;
     private SimpleNeuralNet brain = null;
@@ -40,7 +40,7 @@ public class Predator : MonoBehaviour
     private Transform tfm;
     private float[] vision;
     //private CapsuleAutoController controller;
-    private QuadrupedProceduralMotion motion;
+ 
     private CapsuleCollider collider;
 
     // Genetic alg.
@@ -48,6 +48,7 @@ public class Predator : MonoBehaviour
 
     // Renderer.
     private Material mat = null;
+    private Color matColor;
 
     void Start()
     {
@@ -64,12 +65,14 @@ public class Predator : MonoBehaviour
         // Renderer used to update animal color.
         // It needs to be updated for more complex models.
         //controller = GetComponent<CapsuleAutoController>();
-        motion = GetComponent<QuadrupedProceduralMotion>();
+       
         collider = GetComponent<CapsuleCollider>();
 
         MeshRenderer renderer = GetComponentInChildren<MeshRenderer>();
-        if (renderer != null)
+        if (renderer != null) {
             mat = renderer.material;
+            matColor = renderer.material.color;
+            }
     }
 
     void Update()
@@ -103,19 +106,12 @@ public class Predator : MonoBehaviour
         lastPos.x = dx;
         lastPos.y = dy;
       
-        // If the animal is located in the dimensions of the terrain and over a grass position (details[dy, dx] > 0), it eats it, gain energy and spawn an offspring.
-        /*if ( terrain.isAnimalAround(dx,dy))
+        // To clean the animal pos array just in case
+        if ( terrain.getAnimalPos(dx,dy))
         {
-            // Eat (remove) the grass and gain energy.
             terrain.setAnimalPos(dx, dy, false);
-            Debug.Log("Crounch2");
-            energy += gainEnergy;
-            if (energy > maxEnergy)
-                energy = maxEnergy;
-
-            genetic_algo.addPredatorOffspring(this);
         }
-        */
+        
         // If the energy is below 0, the animal dies.
         if (energy < 0)
         {
@@ -126,7 +122,7 @@ public class Predator : MonoBehaviour
 
         // Update the color of the animal as a function of the energy that it contains.
         if (mat != null)
-            mat.color = Color.red * (energy / maxEnergy);
+            mat.color = matColor * (energy / maxEnergy);
 
         // 1. Update receptor.
         UpdateVision();
@@ -161,7 +157,7 @@ public class Predator : MonoBehaviour
             if (genetic_algo.showVision)
             {
                 Vector3 line_dir = Quaternion.Euler(0.0f, startingAngle + (stepAngle * i), 0.0f) * Vector3.forward;
-                Debug.DrawLine(tfm.position, tfm.TransformPoint(new Vector3(maxVision * line_dir.x, 0, maxVision * line_dir.z)));
+                //Debug.DrawLine(tfm.position, tfm.TransformPoint(new Vector3(maxVision * line_dir.x, 0, maxVision * line_dir.z)));
             }
 
             // Interate over vision length.

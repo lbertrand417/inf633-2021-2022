@@ -10,6 +10,7 @@ public class CapsuleAutoController : MonoBehaviour {
     protected Terrain terrain;
     protected CustomTerrain cterrain;
     protected float width, height;
+   
 
     void Start() {
         terrain = Terrain.activeTerrain;
@@ -21,7 +22,10 @@ public class CapsuleAutoController : MonoBehaviour {
     void Update() {
         Vector3 scale = terrain.terrainData.heightmapScale;
         Transform tfm = transform;
+       
         Vector3 v = tfm.rotation * Vector3.forward * max_speed;
+      
+          
         Vector3 loc = tfm.position + v;
         if (loc.x < 0)
             loc.x += width;

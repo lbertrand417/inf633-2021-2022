@@ -16,7 +16,7 @@ public class Animal : MonoBehaviour
 
     [Header("Energy parameters")]
     public float maxEnergy = 10.0f;
-    public float lossEnergy = 0.25f;
+    public float lossEnergy = 0.2f;
     public float gainEnergy = 10.0f;
     private float energy;
     private float speed = 0f;
@@ -40,12 +40,13 @@ public class Animal : MonoBehaviour
     private Transform tfm;
     private float[] vision;
     private CapsuleAutoController controller;
-
+    private int eatCount = 0;
     // Genetic alg.
     private GeneticAlgo genetic_algo = null;
 
     // Renderer.
-    private Material mat = null;
+    private Material[] mat = null;
+    private Color[] matColors = null;
 
     void Start()
     {
@@ -58,9 +59,21 @@ public class Animal : MonoBehaviour
         // Renderer used to update animal color.
         // It needs to be updated for more complex models.
         controller = GetComponent<CapsuleAutoController>();
-        MeshRenderer renderer = GetComponentInChildren<MeshRenderer>();
+
+        MeshRenderer[] renderer = GetComponentsInChildren<MeshRenderer>();
+        mat = new Material[renderer.Length];
+        matColors = new Color[renderer.Length];
         if (renderer != null)
-            mat = renderer.material;
+        {
+            int i = 0;
+            foreach (MeshRenderer r in renderer)
+            {
+                mat[i] = r.material;
+                matColors[i] = r.material.color;
+                i++;
+            }
+        }
+            
     }
 
     void Update()
@@ -91,8 +104,7 @@ public class Animal : MonoBehaviour
         // Update terrain info
         terrain.setAnimalPos(lastPos.x, lastPos.y, false);
         terrain.setAnimalPos(dx, dy, true);
-        lastPos.x = dx;
-        lastPos.y = dy;
+       
 
         // If the animal is located in the dimensions of the terrain and over a grass position (details[dy, dx] > 0), it eats it, gain energy and spawn an offspring.
         if ((dx >= 0) && dx < (details.GetLength(1)) && (dy >= 0) && (dy < details.GetLength(0)) && details[dy, dx] > 0)
@@ -102,8 +114,9 @@ public class Animal : MonoBehaviour
             energy += gainEnergy;
             if (energy > maxEnergy)
                 energy = maxEnergy;
-
-            genetic_algo.addOffspring(this);
+            eatCount++;
+           // if(eatCount%3==0 || eatCount ==1)
+              genetic_algo.addOffspring(this);
         }
 
         // If the energy is below 0, the animal dies.
@@ -114,7 +127,11 @@ public class Animal : MonoBehaviour
 
         // Update the color of the animal as a function of the energy that it contains.
         if (mat != null)
-            mat.color = Color.white * (energy / maxEnergy);
+        {
+            for(int i = 0; i<mat.Length; i++)
+                mat[i].color = matColors[i]* (energy / maxEnergy);
+        }
+            
 
         // 1. Update receptor.
         UpdateVision();
@@ -125,7 +142,8 @@ public class Animal : MonoBehaviour
         // 3. Act using actuators.
         float angle = (output[0] * 2.0f - 1.0f) * maxAngle;
         tfm.Rotate(0.0f, angle*speed, 0.0f);
-
+        lastPos.x = dx;
+        lastPos.y = dy;
 
     }
 
@@ -148,7 +166,7 @@ public class Animal : MonoBehaviour
             if (genetic_algo.showVision)
             {
                 Vector3 line_dir = Quaternion.Euler(0.0f, startingAngle + (stepAngle * i), 0.0f) * Vector3.forward;
-                Debug.DrawLine(tfm.position, tfm.TransformPoint(new Vector3(maxVision * line_dir.x, 0, maxVision * line_dir.z)));
+                //Debug.DrawLine(tfm.position, tfm.TransformPoint(new Vector3(maxVision * line_dir.x, 0, maxVision * line_dir.z)));
             }
 
             // Interate over vision length.
@@ -219,7 +237,7 @@ public class Animal : MonoBehaviour
         maxVision = parentMaxVision;
         if (mutate)
         {
-            speed += (2.0f * UnityEngine.Random.value - 1.0f) * 0.3f;
+            speed += (2.0f * UnityEngine.Random.value - 1.0f) * 0.15f;
             maxVision += 2.0f * UnityEngine.Random.value - 1.0f;
             
         }
@@ -246,5 +264,6 @@ public class Animal : MonoBehaviour
         energy = 0.0f;
         genetic_algo.removeAnimal(this);
         terrain.setAnimalPos(dx, dy, false);
+        terrain.setAnimalPos(lastPos.x, lastPos.y, false);
     }
 }

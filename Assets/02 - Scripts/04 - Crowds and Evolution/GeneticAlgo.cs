@@ -9,6 +9,7 @@ public class GeneticAlgo : MonoBehaviour
     
     [Header("Genetic Algorithm parameters")]
     public int popSize = 40;
+    public int predSize = 8; 
     public GameObject animalPrefab;
     public GameObject predatorPrefab;
     public bool showVision = false;
@@ -16,6 +17,7 @@ public class GeneticAlgo : MonoBehaviour
 
     private SimpleNeuralNet globalNeuralNet;
     private SimpleNeuralNet globalPredNeuralNet;
+
     [Header("Dynamic elements")]
     public float vegetationGrowthRate = 1.0f;
     public float currentGrowth;
@@ -25,6 +27,7 @@ public class GeneticAlgo : MonoBehaviour
     private List<GameObject> animals;
     private List<GameObject> predators;
     private float totalSpeed;
+    private float totalMaxVision;
     protected Terrain terrain;
     protected CustomTerrain customTerrain;
     protected float width;
@@ -45,7 +48,7 @@ public class GeneticAlgo : MonoBehaviour
         animals = new List<GameObject>();
         predators = new List<GameObject>();
         int[] networkStruct = new int[] { 5, 5, 1 };
-        int[] predNetworkStruct = new int[] { 6, 6, 1 };
+        int[] predNetworkStruct = new int[] { 12, 5, 1 };
         globalNeuralNet = new SimpleNeuralNet( networkStruct);
         globalPredNeuralNet = new SimpleNeuralNet(predNetworkStruct);
         for (int i = 0; i < popSize; i++)
@@ -53,6 +56,7 @@ public class GeneticAlgo : MonoBehaviour
             GameObject animal = makeAnimal();
             animals.Add(animal);
             totalSpeed += 0.5f;
+            totalMaxVision += 20f;
         }
         GameObject predator = makePredator();
         predators.Add(predator);
@@ -66,12 +70,15 @@ public class GeneticAlgo : MonoBehaviour
         {
             animals.Add(makeAnimal());
             totalSpeed += 0.5f;
+            totalMaxVision += 20f;
         }
-        while (predators.Count < popSize / 10)
+        while (predators.Count < predSize / 2)
         {
             predators.Add(makePredator());
         }
-        customTerrain.debug.text = "N° animals: " + animals.Count.ToString() +"\n" + "Avg Speed: " + (totalSpeed/animals.Count).ToString();
+        customTerrain.debug.text = "N° animals: " + animals.Count.ToString() +"\n"
+            + "Avg Speed: " + (totalSpeed/animals.Count).ToString() + "\n" 
+            + "Avg Vision Dist: " + (totalMaxVision / animals.Count).ToString();
 
         // Update grass elements/food resources.
         updateResources();
@@ -161,6 +168,7 @@ public class GeneticAlgo : MonoBehaviour
             totalSpeed += 0.1f;
         }else
          totalSpeed += animal.GetComponent<Animal>().GetSpeed();
+        totalMaxVision += animal.GetComponent<Animal>().GetMaxVision();
         globalNeuralNet = animal.GetComponent<Animal>().GetBrain();
     }
 
@@ -179,7 +187,8 @@ public class GeneticAlgo : MonoBehaviour
     public void removeAnimal(Animal animal)
     {
         animals.Remove(animal.transform.gameObject);
-        totalSpeed -= animal.GetComponent<Animal>().GetSpeed(); 
+        totalSpeed -= animal.GetComponent<Animal>().GetSpeed();
+        totalMaxVision -= animal.GetComponent<Animal>().GetMaxVision();
         Destroy(animal.transform.gameObject);
     }
 
@@ -200,5 +209,9 @@ public class GeneticAlgo : MonoBehaviour
     public float getAverageSpeed()
     {
         return totalSpeed/animals.Count;
+    }
+    public float getAverageMaxVision()
+    {
+        return totalMaxVision / animals.Count;
     }
 }
