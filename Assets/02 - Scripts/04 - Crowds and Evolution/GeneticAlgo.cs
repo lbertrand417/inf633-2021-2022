@@ -77,8 +77,8 @@ public class GeneticAlgo : MonoBehaviour
             predators.Add(makePredator());
         }
         customTerrain.debug.text = "N° animals: " + animals.Count.ToString() +"\n"
-            + "Avg Speed: " + (totalSpeed/animals.Count).ToString() + "\n" 
-            + "Avg Vision Dist: " + (totalMaxVision / animals.Count).ToString();
+            + "Avg Speed: " + (getAverageSpeed()).ToString() + "\n" 
+            + "Avg Vision Dist: " + (getAverageMaxVision()).ToString();
 
         // Update grass elements/food resources.
         updateResources();
@@ -208,10 +208,10 @@ public class GeneticAlgo : MonoBehaviour
     }
     public float getAverageSpeed()
     {
-        return totalSpeed/animals.Count;
+        return Mathf.Max(totalSpeed/animals.Count,0.1f);
     }
     public float getAverageMaxVision()
     {
-        return totalMaxVision / animals.Count;
+        return Mathf.Max(totalMaxVision / animals.Count,10f);
     }
 }
