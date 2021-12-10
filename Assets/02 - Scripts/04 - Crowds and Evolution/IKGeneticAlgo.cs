@@ -158,7 +158,7 @@ public class IKGeneticAlgo : MonoBehaviour
     /// <param name="parent"></param>
     public void addOffspring(IKAnimal parent)
     {
-        GameObject animal = makeAnimal(parent.transform.position);
+        GameObject animal = makeAnimal(new Vector3(parent.transform.position.x, customTerrain.get(parent.transform.position.x, parent.transform.position.z), parent.transform.position.z));
         animal.GetComponent<IKAnimal>().InheritBrain(parent.GetBrain(), mutate);
         animal.GetComponent<IKAnimal>().InheritAttributes(parent.GetSpeed(), parent.GetMaxVision(), mutate); ;
         animals.Add(animal);
@@ -189,8 +189,19 @@ public class IKGeneticAlgo : MonoBehaviour
         animals.Remove(animal.transform.gameObject);
         totalSpeed -= animal.GetComponent<IKAnimal>().GetSpeed();
         totalMaxVision -= animal.GetComponent<IKAnimal>().GetMaxVision();
-        Destroy(animal.goal.gameObject);
+        // Destroy goal object
+        DestroyImmediate(animal.emptyGO.gameObject);
         // Destroy red balls
+        QuadrupedProceduralMotion qpm = animal.GetComponent<QuadrupedProceduralMotion>();
+        qpm.frontLeftFoot.Moving = false;
+        qpm.frontRightFoot.Moving = false;
+        qpm.backLeftFoot.Moving = false;
+        qpm.backRightFoot.Moving = false;
+
+        DestroyImmediate(qpm.frontLeftFoot.gameObject);
+        DestroyImmediate(qpm.frontRightFoot.gameObject);
+        DestroyImmediate(qpm.backLeftFoot.gameObject);
+        DestroyImmediate(qpm.backRightFoot.gameObject);
         Destroy(animal.transform.gameObject);
     }
 

@@ -244,7 +244,7 @@ public class QuadrupedProceduralMotion : MonoBehaviour
         goalWorldLookDir = goal.position - headBone.position;
         if (headDebug)
         {
-            Debug.DrawRay(headBone.position, goalWorldLookDir);
+            Debug.DrawRay(headBone.position, goalWorldLookDir, Color.yellow);
         }
         goalLocalLookDir = headBone.parent.transform.InverseTransformDirection(goalWorldLookDir);
 

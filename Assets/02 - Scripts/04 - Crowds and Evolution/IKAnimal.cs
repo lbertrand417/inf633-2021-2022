@@ -49,7 +49,7 @@ public class IKAnimal : MonoBehaviour
     protected Color[] matColors = null;
 
     public QuadrupedProceduralMotion ik;
-    public GameObject goal;
+    public GameObject emptyGO; // For goal transform
 
     void Start()
     {
@@ -57,6 +57,7 @@ public class IKAnimal : MonoBehaviour
         vision = new float[nEyes];
         networkStruct = new int[] { nEyes, 5, 1 };
         energy = maxEnergy;
+        
         tfm = transform;
 
         // Renderer used to update animal color.
@@ -79,9 +80,11 @@ public class IKAnimal : MonoBehaviour
 
         // Set goal
         ik = this.GetComponent<QuadrupedProceduralMotion>();
-        GameObject goal = new GameObject();
-        goal.transform.position = tfm.position;
-        ik.goal = gameObject.transform;
+        emptyGO = new GameObject();
+        ik.goal = emptyGO.transform;
+
+        Vector3 goalPos = tfm.TransformPoint(new Vector3(ik.minDistToGoal * Vector3.forward.x, 0, ik.minDistToGoal * Vector3.forward.z));
+        ik.goal.position = new Vector3(goalPos.x, terrain.get(goalPos.x, goalPos.z), goalPos.z);
     }
 
     void Update()
@@ -90,9 +93,9 @@ public class IKAnimal : MonoBehaviour
         if (brain == null)
             brain = new SimpleNeuralNet(networkStruct);
         if (speed == 0f)
-            speed = 0.5f;
-        if (speed < 0.1f)
-            speed = 0.1f;
+            speed = 0.2f;
+        if (speed < 0.05f)
+            speed = 0.05f;
         if (terrain == null)
             return;
         if (details == null)
@@ -110,8 +113,22 @@ public class IKAnimal : MonoBehaviour
         energy -= lossEnergy * speed;
 
         // Update terrain info
-        terrain.setAnimalPos(lastPos.x, lastPos.y, false);
-        terrain.setAnimalPos(dx, dy, true);
+        if ((lastPos.x >= 0) && lastPos.x < (details.GetLength(1)) && (lastPos.y >= 0) && (lastPos.y < details.GetLength(0)))
+        {
+            terrain.setAnimalPos(lastPos.x, lastPos.y, false);
+        } else
+        {
+            genetic_algo.removeAnimal(this);
+        }
+
+        if ((dx >= 0) && dx < (details.GetLength(1)) && (dy >= 0) && (dy < details.GetLength(0)))
+        {
+            terrain.setAnimalPos(dx, dy, true);
+        }
+        else
+        {
+            genetic_algo.removeAnimal(this);
+        }
 
 
         // If the animal is located in the dimensions of the terrain and over a grass position (details[dy, dx] > 0), it eats it, gain energy and spawn an offspring.
@@ -150,7 +167,27 @@ public class IKAnimal : MonoBehaviour
         // 3. Act using actuators.
         float angle = (output[0] * 2.0f - 1.0f) * maxAngle;
         //tfm.Rotate(0.0f, angle * speed, 0.0f);
-        ik.goal.Translate(0.1f, 0.0f, 0.2f);
+        //ik.goal.Translate(0.1f, 0.0f, 0.2f);
+        ik.goal.Rotate(0.0f, angle * speed, 0.0f);
+
+        Terrain leterrain = Terrain.activeTerrain;
+        Vector3 scale = leterrain.terrainData.heightmapScale;
+
+        Vector3 v = ik.goal.rotation * Vector3.forward * speed;
+        Vector3 loc = ik.goal.position + v;
+        if (loc.x < 0)
+            loc.x = 0;
+        else if (loc.x > leterrain.terrainData.size.x)
+            loc.x = leterrain.terrainData.size.x;
+        if (loc.z < 0)
+            loc.z = 0;
+        else if (loc.z > leterrain.terrainData.size.z)
+            loc.z = leterrain.terrainData.size.z;
+        loc.y = terrain.getInterp(loc.x / scale.x, loc.z / scale.z);
+        ik.goal.position = loc;
+        //Vector3 global_line_dir = tfm.TransformPoint(new Vector3(speed * ik.goal.forward.x, 0, speed * ik.goal.forward.z));
+        //Vector3 goalPos = tfm.TransformPoint(new Vector3(maxVision * Vector3.forward.x, 0, maxVision * Vector3.forward.z));
+        //ik.goal.position = new Vector3(global_line_dir.x, terrain.get(global_line_dir.x, global_line_dir.z), global_line_dir.z);
         lastPos.x = dx;
         lastPos.y = dy;
 
@@ -177,7 +214,7 @@ public class IKAnimal : MonoBehaviour
             {
                 Vector3 line_dir = Quaternion.Euler(0.0f, startingAngle + (stepAngle * i), 0.0f) * Vector3.forward;
                 Vector3 global_line_dir = tfm.TransformPoint(new Vector3(maxVision * line_dir.x, 0, maxVision * line_dir.z));
-                Debug.DrawLine(tfm.position, new Vector3(global_line_dir.x,
+                Debug.DrawLine(ik.headBone.position, new Vector3(global_line_dir.x,
                     terrain.get(global_line_dir.x, global_line_dir.z),
                     global_line_dir.z));
             }
@@ -205,7 +242,7 @@ public class IKAnimal : MonoBehaviour
                     {
                         Vector3 line_dir = Quaternion.Euler(0.0f, startingAngle + (stepAngle * i), 0.0f) * Vector3.forward;
                         Vector3 global_line_dir = tfm.TransformPoint(new Vector3(distance * line_dir.x, 0, distance * line_dir.z));
-                        Debug.DrawLine(tfm.position, new Vector3(global_line_dir.x,
+                        Debug.DrawLine(ik.headBone.position, new Vector3(global_line_dir.x,
                             terrain.get(global_line_dir.x, global_line_dir.z),
                             global_line_dir.z), Color.red);
                     }
@@ -219,7 +256,7 @@ public class IKAnimal : MonoBehaviour
                     {
                         Vector3 line_dir = Quaternion.Euler(0.0f, startingAngle + (stepAngle * i), 0.0f) * Vector3.forward;
                         Vector3 global_line_dir = tfm.TransformPoint(new Vector3(distance * line_dir.x, 0, distance * line_dir.z));
-                        Debug.DrawLine(tfm.position, new Vector3(global_line_dir.x,
+                        Debug.DrawLine(ik.headBone.position, new Vector3(global_line_dir.x,
                             terrain.get(global_line_dir.x, global_line_dir.z),
                             global_line_dir.z), Color.blue);
                     }

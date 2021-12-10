@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -35,7 +36,7 @@ public class PerlinBrush : TerrainBrush
                     if (!lowerTerrain)
                         terrain.set(x+xi,z+zi, oldHeight + calculateNoise(x+xi,z+zi,scale,LOD)*strength*borderFactor);
                     else
-                        terrain.set(x + xi, z + zi, oldHeight - calculateNoise(x + xi, z + zi, scale, LOD) * strength * borderFactor);
+                        terrain.set(x + xi, z + zi, Math.Max(0, oldHeight - calculateNoise(x + xi, z + zi, scale, LOD) * strength * borderFactor));
                 }
             }
         }
