@@ -7106,7 +7106,7 @@ MonoBehaviour:
   stepAngle: 10
   nEyes: 5
   ik: {fileID: 0}
-  goal: {fileID: 0}
+  emptyGO: {fileID: 0}
 --- !u!114 &8107060311548940699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7114,19 +7114,19 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8107060311548940698}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 54acf97cd5559e0419ee41af3ebd32a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   goal: {fileID: 0}
-  turnSpeed: 150
-  moveSpeed: 3
+  turnSpeed: 100
+  moveSpeed: 10
   moveBackwardFactor: 0.66
   turnAcceleration: 4
   moveAcceleration: 2
-  minDistToGoal: 4.5
-  maxDistToGoal: 6
+  minDistToGoal: 0
+  maxDistToGoal: 1
   hips: {fileID: 8107060311549103564}
   heightAcceleration: 1
   constantHipsPosition: {x: 0, y: 0, z: 0}
@@ -7145,7 +7145,7 @@ MonoBehaviour:
   tailTurnSpeed: 5
   headBone: {fileID: 8107060311549103612}
   speedHead: 1
-  headDebug: 0
+  headDebug: 1
   goalWorldLookDir: {x: 0, y: 0, z: 0}
   goalLocalLookDir: {x: 0, y: 0, z: 0}
   angleHeadLimit: 90
@@ -7160,7 +7160,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8107060311548940698}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c23709d95c36b9246b496b78410c1a30, type: 3}
   m_Name: 
