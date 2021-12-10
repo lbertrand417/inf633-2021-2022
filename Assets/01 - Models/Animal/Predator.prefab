@@ -81,7 +81,7 @@ MonoBehaviour:
   mutateStrength: 0.5
   maxAngle: 10
   maxEnergy: 30
-  lossEnergy: 0.5
+  lossEnergy: 1
   gainEnergy: 30
   maxVision: 60
   stepAngle: 5
