@@ -102,13 +102,30 @@ public class IKPredator : MonoBehaviour
         energy -= lossEnergy * speed;
 
         // Update terrain info
-        terrain.setPredatorPos(lastPos.x, lastPos.y, false);
-        terrain.setPredatorPos(dx, dy, true);
+        if ((lastPos.x >= 0) && lastPos.x < (details.GetLength(1)) && (lastPos.y >= 0) && (lastPos.y < details.GetLength(0)))
+        {
+            terrain.setPredatorPos(lastPos.x, lastPos.y, false);
+        }
+        else
+        {
+            genetic_algo.removePredator(this);
+        }
+
+        if ((dx >= 0) && dx < (details.GetLength(1)) && (dy >= 0) && (dy < details.GetLength(0)))
+        {
+            terrain.setPredatorPos(dx, dy, true);
+        }
+        else
+        {
+            genetic_algo.removePredator(this);
+        }
+
+
         lastPos.x = dx;
         lastPos.y = dy;
 
         // To clean the animal pos array just in case
-        if (terrain.getAnimalPos(dx, dy))
+        if ((dx >= 0) && dx < (details.GetLength(1)) && (dy >= 0) && (dy < details.GetLength(0)) && terrain.getAnimalPos(dx, dy))
         {
             terrain.setAnimalPos(dx, dy, false);
         }

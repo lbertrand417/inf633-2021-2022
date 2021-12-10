@@ -1415,8 +1415,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3404752603996515034}
   - component: {fileID: 3404752603996515033}
+  - component: {fileID: 1406169734312479883}
   - component: {fileID: 3404752603996515032}
-  - component: {fileID: 3404752603996515039}
   - component: {fileID: 3404752603996515028}
   m_Layer: 2
   m_Name: Human - (Autonomous)
@@ -1460,6 +1460,29 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1406169734312479883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3404752603996515038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf6d28bf738043941894af7b652ac716, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  swapRate: 0.01
+  mutateRate: 0.01
+  swapStrength: 10
+  mutateStrength: 0.5
+  maxAngle: 10
+  maxEnergy: 30
+  lossEnergy: 0.3
+  gainEnergy: 30
+  maxVision: 60
+  stepAngle: 5
+  nEyes: 12
 --- !u!143 &3404752603996515032
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1478,29 +1501,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &3404752603996515039
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3404752603996515038}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2da0cc07004fd40a196e4058316a4276, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  swap_rate: 0.01
-  mutate_rate: 0.01
-  swap_strength: 10
-  mutate_strength: 0.5
-  max_angle: 10
-  max_energy: 10
-  energy_loss: 0.1
-  energy_gain: 10
-  max_vision: 20
-  angle_step: 10
-  nb_eyes: 5
 --- !u!114 &3404752603996515028
 MonoBehaviour:
   m_ObjectHideFlags: 0

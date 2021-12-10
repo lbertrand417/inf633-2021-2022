@@ -158,7 +158,9 @@ public class IKGeneticAlgo : MonoBehaviour
     /// <param name="parent"></param>
     public void addOffspring(IKAnimal parent)
     {
-        GameObject animal = makeAnimal(new Vector3(parent.transform.position.x, customTerrain.get(parent.transform.position.x, parent.transform.position.z), parent.transform.position.z));
+        Vector3 scale = terrain.terrainData.heightmapScale;
+        float y = customTerrain.getInterp(parent.transform.position.x / scale.x, parent.transform.position.z / scale.z);
+        GameObject animal = makeAnimal(new Vector3(parent.transform.position.x, y, parent.transform.position.z));
         animal.GetComponent<IKAnimal>().InheritBrain(parent.GetBrain(), mutate);
         animal.GetComponent<IKAnimal>().InheritAttributes(parent.GetSpeed(), parent.GetMaxVision(), mutate); ;
         animals.Add(animal);
@@ -189,20 +191,34 @@ public class IKGeneticAlgo : MonoBehaviour
         animals.Remove(animal.transform.gameObject);
         totalSpeed -= animal.GetComponent<IKAnimal>().GetSpeed();
         totalMaxVision -= animal.GetComponent<IKAnimal>().GetMaxVision();
-        // Destroy goal object
-        DestroyImmediate(animal.emptyGO.gameObject);
-        // Destroy red balls
+        
+        // Retrieve objects that are not deleted with the animal
+        GameObject goalGO = animal.GetGoal().gameObject;
         QuadrupedProceduralMotion qpm = animal.GetComponent<QuadrupedProceduralMotion>();
-        qpm.frontLeftFoot.Moving = false;
-        qpm.frontRightFoot.Moving = false;
-        qpm.backLeftFoot.Moving = false;
-        qpm.backRightFoot.Moving = false;
+        FootStepper frontLeftFoot = qpm.frontLeftFoot;
+        frontLeftFoot.Moving = false;
+        GameObject frontLeftFootGO = frontLeftFoot.gameObject;
+        FootStepper frontRightFoot = qpm.frontRightFoot;
+        frontRightFoot.Moving = false;
+        GameObject frontRightFootGO = frontRightFoot.gameObject;
+        FootStepper backLeftFoot = qpm.backLeftFoot;
+        backLeftFoot.Moving = false;
+        GameObject backLeftFootGO = backLeftFoot.gameObject;
+        FootStepper backRightFoot = qpm.backRightFoot;
+        backRightFoot.Moving = false;
+        GameObject backRightFootGO = backRightFoot.gameObject;
 
-        DestroyImmediate(qpm.frontLeftFoot.gameObject);
-        DestroyImmediate(qpm.frontRightFoot.gameObject);
-        DestroyImmediate(qpm.backLeftFoot.gameObject);
-        DestroyImmediate(qpm.backRightFoot.gameObject);
+        // Destroy the animal first (to deal with update problems)
         Destroy(animal.transform.gameObject);
+
+        // Destroy goal object
+        Destroy(goalGO);
+        // Destroy red balls
+        Destroy(frontLeftFootGO);
+        Destroy(frontRightFootGO);
+        Destroy(backLeftFootGO);
+        Destroy(backRightFootGO);
+        
     }
 
     public void removePredator(IKPredator predator)

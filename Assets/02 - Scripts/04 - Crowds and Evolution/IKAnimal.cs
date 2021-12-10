@@ -48,8 +48,8 @@ public class IKAnimal : MonoBehaviour
     protected Material[] mat = null;
     protected Color[] matColors = null;
 
-    public QuadrupedProceduralMotion ik;
-    public GameObject emptyGO; // For goal transform
+    protected QuadrupedProceduralMotion ik;
+    protected GameObject emptyGO; // For goal transform
 
     void Start()
     {
@@ -314,6 +314,11 @@ public class IKAnimal : MonoBehaviour
     public float GetHealth()
     {
         return energy / maxEnergy;
+    }
+
+    public GameObject GetGoal()
+    {
+        return emptyGO;
     }
 
     public void GetEaten(int dx, int dy)
