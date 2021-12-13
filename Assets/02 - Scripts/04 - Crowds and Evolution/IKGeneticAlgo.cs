@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -75,7 +75,7 @@ public class IKGeneticAlgo : MonoBehaviour
         {
             predators.Add(makePredator());
         }
-        customTerrain.debug.text = "N° animals: " + animals.Count.ToString() + "\n"
+        customTerrain.debug.text = "Nï¿½ animals: " + animals.Count.ToString() + "\n"
             + "Avg Speed: " + (totalSpeed / animals.Count).ToString() + "\n"
             + "Avg Vision Dist: " + (totalMaxVision / animals.Count).ToString();
 
@@ -191,7 +191,7 @@ public class IKGeneticAlgo : MonoBehaviour
         animals.Remove(animal.transform.gameObject);
         totalSpeed -= animal.GetComponent<IKAnimal>().GetSpeed();
         totalMaxVision -= animal.GetComponent<IKAnimal>().GetMaxVision();
-        
+
         // Retrieve objects that are not deleted with the animal
         GameObject goalGO = animal.GetGoal().gameObject;
         QuadrupedProceduralMotion qpm = animal.GetComponent<QuadrupedProceduralMotion>();
@@ -218,7 +218,7 @@ public class IKGeneticAlgo : MonoBehaviour
         Destroy(frontRightFootGO);
         Destroy(backLeftFootGO);
         Destroy(backRightFootGO);
-        
+
     }
 
     public void removePredator(IKPredator predator)

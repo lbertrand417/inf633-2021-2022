@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6733265589692463593}
   - component: {fileID: -8622209333514255230}
   - component: {fileID: -5569514710208361464}
+  - component: {fileID: -5585564340573210360}
   m_Layer: 0
   m_Name: Predator
   m_TagString: Untagged
@@ -86,6 +87,20 @@ MonoBehaviour:
   maxVision: 60
   stepAngle: 5
   nEyes: 12
+--- !u!136 &-5585564340573210360
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6733265589692463594}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6733265590630552185
 GameObject:
   m_ObjectHideFlags: 0
@@ -114,7 +129,7 @@ Transform:
   m_GameObject: {fileID: 6733265590630552185}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 1.9, y: 1.9, z: 1.9}
   m_Children: []
   m_Father: {fileID: 6733265589692463591}
   m_RootOrder: 0

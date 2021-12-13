@@ -7098,14 +7098,12 @@ MonoBehaviour:
   swapStrength: 10
   mutateStrength: 0.5
   maxAngle: 10
-  maxEnergy: 10
-  lossEnergy: 0.2
+  maxEnergy: 46.4
+  lossEnergy: 0
   gainEnergy: 10
   maxVision: 20
   stepAngle: 10
   nEyes: 5
-  ik: {fileID: 0}
-  emptyGO: {fileID: 0}
 --- !u!114 &8107060311548940699
 MonoBehaviour:
   m_ObjectHideFlags: 0

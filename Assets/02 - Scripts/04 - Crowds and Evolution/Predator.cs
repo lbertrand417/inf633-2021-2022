@@ -20,6 +20,7 @@ public class Predator : MonoBehaviour
     public float gainEnergy = 30.0f;
     private float energy;
     private float speed = 0f;
+    private int eatenAnimal = 0;
     
     [Header("Sensor - Vision")]
     public float maxVision = 60.0f;
@@ -158,9 +159,9 @@ public class Predator : MonoBehaviour
             {
                 Vector3 line_dir = Quaternion.Euler(0.0f, startingAngle + (stepAngle * i), 0.0f) * Vector3.forward;
                 Vector3 global_line_dir = tfm.TransformPoint(new Vector3(maxVision * line_dir.x, 0, maxVision * line_dir.z));
-                Debug.DrawLine(tfm.position, new Vector3(global_line_dir.x,
-                    terrain.get(global_line_dir.x, global_line_dir.z),
-                    global_line_dir.z));
+                //Debug.DrawLine(tfm.position, new Vector3(global_line_dir.x,
+                  //  terrain.get(global_line_dir.x, global_line_dir.z),
+                    //global_line_dir.z));
             }
 
             // Interate over vision length.
@@ -244,8 +245,8 @@ public class Predator : MonoBehaviour
             energy += gainEnergy;
             if (energy > maxEnergy)
                 energy = maxEnergy;
-
-           
+         
+            if(eatenAnimal==1||eatenAnimal%2==0)
             genetic_algo.addPredatorOffspring(this);
 
             Animal animal = other.gameObject.GetComponent<Animal>();
