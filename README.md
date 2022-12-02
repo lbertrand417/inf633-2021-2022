@@ -1,5 +1,9 @@
 # INF633 - Advanced 3D Graphics (2021-2022) - Lab Course
 
+Final project demo:
+Terrain editing: https://drive.google.com/file/d/1Uhkw8cqe97vrTLqV8XDaZ29EJZ6x4d7B/view?usp=share_link
+Ecosystem simulation: https://drive.google.com/file/d/1eIuGZ-F6X2IU4jSTettHs2pYw9PCRopc/view?usp=share_link
+
 [Github Repository](https://github.com/edualvarado/inf633-2021-2022) | [Github Page](https://edualvarado.github.io/inf633-2021-2022/) | [Moodle](https://moodle.polytechnique.fr/enrol/index.php?id=13007)
 
 ------
